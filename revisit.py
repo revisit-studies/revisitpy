@@ -62,6 +62,7 @@ class Study:
         """Save the object data to a file in JSON format."""
         with open(file_path, 'w') as json_file:
             json.dump(json.loads(self.json()), json_file, indent=4)
+        print(f"Wrote study config to {file_path}")
 
 
 class TopLevel:
