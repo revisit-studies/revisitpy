@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 import json
 import copy
 from itertools import permutations
@@ -9,24 +9,59 @@ class Study:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        if self.sequence is not None:
-            self.components = json.loads(self.sequence.generate_components())
+        if hasattr(self, 'sequence'):
+            self.__components_raw__ = self.sequence.get_components()
+            # Creates dict object using the given name as the key and the jsonified object as the value.
+            self.components = json.dumps(
+                {f"{comp.__name__}": json.loads(comp.json()) for comp in self.__components_raw__}, indent=4
+            )
 
     def __str__(self):
         return str(self.json())
 
     def json(self):
         current_dict = {}
-        for attr, value in vars(self).items():
-            if isinstance(value, UIConfig):
-                value = json.loads(value.json())
-            if isinstance(value, Sequence):
-                value = json.loads(value.json())
-            if isinstance(value, StudyMetadata):
-                value = json.loads(value.json())
 
-            current_dict[attr] = value
+        if hasattr(self, 'sequence'):
+            self.__components_raw__ = self.sequence.get_components()
+
+            # Apply response context to each response in each component
+            if hasattr(self, '__context__'):
+                for type, data in self.__context__.items():
+                    for comp in self.__components_raw__:
+                        for response in comp.response:
+                            if response.type == type or type == 'all':
+                                response.data(
+                                    overwrite=False,
+                                    **data
+                                )
+
+            self.components = json.dumps(
+                {f"{comp.__name__}": json.loads(comp.json()) for comp in self.__components_raw__}, indent=4
+            )
+
+        for attr, value in vars(self).items():
+            if not attr.startswith('__'):
+                if isinstance(value, UIConfig):
+                    value = json.loads(value.json())
+                if isinstance(value, Sequence):
+                    value = json.loads(value.json())
+                if isinstance(value, StudyMetadata):
+                    value = json.loads(value.json())
+                if attr == 'components':
+                    value = json.loads(value)
+
+                current_dict[attr] = value
         return json.dumps(current_dict, indent=4)
+
+    def response_context(self, **kwargs):
+        self.__context__ = kwargs
+        return self
+
+    def save(self, file_path):
+        """Save the object data to a file in JSON format."""
+        with open(file_path, 'w') as json_file:
+            json.dump(json.loads(self.json()), json_file, indent=4)
 
 
 class TopLevel:
@@ -65,10 +100,11 @@ class Response:
             current_dict[attr] = value
         return json.dumps(current_dict, indent=4)
 
-    def data(self, **kwargs):
+    def data(self, overwrite=True, **kwargs):
         for key, value in kwargs.items():
             if key != 'base':
-                setattr(self, key, value)
+                if overwrite is True or (overwrite is False and not hasattr(self, key)):
+                    setattr(self, key, value)
         return self
 
 
@@ -80,8 +116,8 @@ class Checkbox(Response):
 
 class Component:
     def __init__(self, **kwargs):
-        if 'name' not in kwargs.keys():
-            raise ValueError('Name is required in component.')
+        if '__name__' not in kwargs.keys():
+            raise ValueError('Attribute "__name__" is required in component.')
 
         self.response = []
 
@@ -109,9 +145,10 @@ class Component:
 
         current_dict = {}
         for attr, value in vars(self).items():
-            if attr == 'response':
-                value = [json.loads(r.json()) for r in self.response]
-            current_dict[attr] = value
+            if not attr.startswith('__'):
+                if attr == 'response':
+                    value = [json.loads(r.json()) for r in self.response]
+                current_dict[attr] = value
 
         return json.dumps(current_dict, indent=4)
 
@@ -127,6 +164,27 @@ class Component:
             if response.id == id:
                 return response
         return None
+
+    def edit_response(self, id: str, **kwargs) -> 'Component':
+        for response in self.response:
+            if response.id == id:
+                response.data(**kwargs)
+                return self
+
+        raise ValueError('No response with given ID found.')
+
+    def response_context(self, **kwargs):
+        self.__context__ = kwargs
+
+        for type, data in self.__context__.items():
+            for response in self.response:
+                if response.type == type or type == 'all':
+                    response.data(
+                        overwrite=False,
+                        **data
+                    )
+
+        return self
 
 
 class Sequence:
@@ -150,7 +208,7 @@ class Sequence:
     def json(self):
 
         components_data = [
-            item.name if isinstance(item, Component) else json.loads(item.json()) for item in self.components
+            item.__name__ if isinstance(item, Component) else json.loads(item.json()) for item in self.components
         ]
 
         current_dict = {
@@ -160,17 +218,14 @@ class Sequence:
 
         return json.dumps(current_dict, indent=4)
 
-    def generate_components(self, component_dict: Dict = None):
-        if component_dict is None:
-            component_dict = {}
-
+    def get_components(self, component_list: List[Component] = []):
         for comp in self.components:
             if isinstance(comp, Component):
-                component_dict[comp.name] = json.loads(comp.json())
+                component_list.append(comp)
             elif isinstance(comp, Sequence):
-                comp.generate_components(component_dict)
+                comp.get_components(component_list)
 
-        return json.dumps(component_dict, indent=4)
+        return component_list
 
 
 class StudyMetadata(TopLevel):
@@ -188,14 +243,11 @@ class Components(TopLevel):
         super().__init__(**kwargs)
 
 
-# Factory function for Component
+# -----------------------------------
+# Factory Functions
+# -----------------------------------
 def component(**kwargs):
     return Component(**kwargs)
-
-
-# Factory function for Checkbox
-def checkbox(**kwargs):
-    return Checkbox(**kwargs)
 
 
 def sequence(**kwargs):
@@ -206,21 +258,28 @@ def study(**kwargs):
     return Study(**kwargs)
 
 
-def from_response(response: Response):
-    return copy.deepcopy(response)
-
-
-def response(**kwargs):
-    return Response(**kwargs)
-
-
-def permute(items: List[str]):
-    return set(permutations(items))
-
-
 def studyMetadata(**kwargs):
     return StudyMetadata(**kwargs)
 
 
 def uiConfig(**kwargs):
     return UIConfig(**kwargs)
+
+
+def response(**kwargs):
+    return Response(**kwargs)
+
+
+def checkbox(**kwargs):
+    return Checkbox(**kwargs)
+
+# -----------------------------------
+# -----------------------------------
+
+
+def from_response(response: Response):
+    return copy.deepcopy(response)
+
+
+def permute(items: List[str]):
+    return set(permutations(items))

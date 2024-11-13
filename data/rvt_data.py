@@ -170,19 +170,6 @@ base_component_1_data = {
     "nextButtonLocation": "sidebar",
     "description": "Content: Visualization Only",
     "instruction": "Please answer the following question about the plot:",
-    "responseContext": {
-        "all": {
-            "required": True,
-            "location": "sidebar"
-        },
-        "numerical": {
-            "placeholder": "Please enter your answer here",
-            "min": 0
-        },
-        "radio": {
-            "options": "${{ yesNo }}"
-        }
-    },
     "response": [
         {
             "id": "voq1",
@@ -264,14 +251,6 @@ base_component_2_data = {
     "nextButtonLocation": "sidebar",
     "description": "Content: Visualization Only",
     "instruction": "Rate the content:",
-    "responseContext": {
-        "likert": {
-            "required": True,
-            "location": "sidebar",
-            "numItems": 5,
-            "leftLabel": "Not"
-        }
-    },
     "response": [
         {
             "id": "voq1",
