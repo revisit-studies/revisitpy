@@ -1,5 +1,5 @@
 import revisit as rvt
-import data.rvt_data as rvt_data
+import data.upset.metadata as metadata
 
 '''
 To Note:
@@ -13,8 +13,8 @@ that don't already have a value assigned.
 '''
 
 # Create study metadata and ui config from JSON object in rvt_data
-study_metadata = rvt.studyMetadata(**rvt_data.metadata)
-ui_config = rvt.uiConfig(**rvt_data.ui_config)
+study_metadata = rvt.studyMetadata(**metadata.metadata)
+ui_config = rvt.uiConfig(**metadata.ui_config)
 
 # Initialize study with studyMetadata
 # Use method chaining to assign a default response context
@@ -26,9 +26,9 @@ my_study = rvt.study(
 )
 
 # Initialize base components to copy from.
-base_question_1 = rvt.component(__name__='base_component_1', **rvt_data.base_component_1_data)
-base_question_2 = rvt.component(__name__='base_component_2', **rvt_data.base_component_2_data)
-base_question_3 = rvt.component(__name__='base_component_3', **rvt_data.base_component_3_data)
+base_question_1 = rvt.component(__name__='base_component_1', **metadata.base_component_1_data)
+base_question_2 = rvt.component(__name__='base_component_2', **metadata.base_component_2_data)
+base_question_3 = rvt.component(__name__='base_component_3', **metadata.base_component_3_data)
 
 # Create blank introduction component.
 introduction = rvt.component(__name__='introduction', type='Markdown')
@@ -43,7 +43,7 @@ inner_sequence = rvt.sequence(order='latinSquare')
 sequences = {}
 
 # Iterate through data options (i.e. 'covid', 'tennis', 'organization')
-for key, curr_options in rvt_data.options.items():
+for key, curr_options in metadata.options.items():
 
     # Iterate through vis, text, both
     for question_type in ['Vis', 'Text', 'TextAndVis']:
@@ -56,12 +56,12 @@ for key, curr_options in rvt_data.options.items():
             base=base_question_1,
             # Overload path and correctAnswer
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
-            correctAnswer=rvt_data.correct_answers[key],
+            correctAnswer=metadata.correct_answers[key],
         ).edit_response(
             # Edit response with id='voq2'
             id='voq2',
             options=curr_options,
-            prompt=rvt_data.question_type_data[question_type]['q1_prompt']
+            prompt=metadata.question_type_data[question_type]['q1_prompt']
         ).edit_response(
             # Edit response with id='voq3'
             id='voq3',
@@ -77,7 +77,7 @@ for key, curr_options in rvt_data.options.items():
             __name__=f'{key.lower()}-{question_type}-question-2',
             base=base_question_2,
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
-            description=rvt_data.question_type_data[question_type]['description']
+            description=metadata.question_type_data[question_type]['description']
         ).response_context(
             likert={"numItems": 5, "leftLabel": "Not"}
         )
@@ -87,14 +87,14 @@ for key, curr_options in rvt_data.options.items():
             __name__=f'{key.lower()}-{question_type}-question-3',
             base=base_question_3,
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
-            description=rvt_data.question_type_data[question_type]['description']
+            description=metadata.question_type_data[question_type]['description']
         ).responses([
             # Only one response. Instead of using edit_response, we can redefine responses.
             # 'from_response' makes a deep copy of the response. 'get_response' can search
             # for a response based on id from a component.
             # 'data' is a way to assign the values of a response without reinitializing it
             rvt.from_response(base_question_2.get_response(id='voq1')).data(
-                prompt=rvt_data.question_type_data[question_type]['q3_prompt']
+                prompt=metadata.question_type_data[question_type]['q3_prompt']
             )
             # Alternatively, we can use similar methods to components inheriting bases::
             # rvt.response(base_question_2.get_response(id='voq1'),
@@ -114,7 +114,7 @@ for key, curr_options in rvt_data.options.items():
         sequences[f'{key.lower()}-{question_type}'] = curr_sequence
 
 # Permuting over all possible combinations
-for set in rvt.permute(rvt_data.options.keys()):
+for set in rvt.permute(metadata.options.keys()):
     # Create a sequence with the sub sequences
     temp_sequence = rvt.sequence(
         order='latinSquare',
