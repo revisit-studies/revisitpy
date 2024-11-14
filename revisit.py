@@ -1,8 +1,10 @@
-from typing import List
+from typing import List, Any
 import json
 import copy
 from itertools import permutations
-
+import csv
+from dataclasses import make_dataclass
+import re
 
 class Study:
     def __init__(self, **kwargs):
@@ -228,6 +230,9 @@ class Sequence:
 
         return component_list
 
+    def from_data(self, data_list: list):
+        return DataIterator(data_list, self)
+
 
 class StudyMetadata(TopLevel):
     def __init__(self, **kwargs):
@@ -242,6 +247,46 @@ class UIConfig(TopLevel):
 class Components(TopLevel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+
+class DataIterator:
+    def __init__(self, data_list: List, parent_class: Sequence):
+        self.data = data_list
+        self.parent_class = parent_class
+
+    def component(self, **kwargs):
+        for datum in self.data:
+            current_dict = {}
+            for key, value in kwargs.items():
+                if key == 'parameters':
+                    param_dict = {}
+                    for param_key, param_value in value.items():
+                        if type(param_value) is str:
+                            param_datum_value = extract_datum_value(param_value)
+                            if param_datum_value is not None:
+                                param_dict[param_key] = getattr(datum, param_datum_value)
+                            else:
+                                param_dict[param_key] = value
+                        else:
+                            param_dict[param_key] = value
+                    current_dict[key] = param_dict
+                else:
+                    if type(value) is str:
+                        datum_value = extract_datum_value(value)
+                        if datum_value is not None:
+                            if key == '__name__':
+                                current_dict[key] = str(getattr(datum, datum_value))
+                            else:
+                                current_dict[key] = getattr(datum, datum_value)
+                        else:
+                            current_dict[key] = value
+                    else:
+                        current_dict[key] = value
+            curr_component = Component(**current_dict)
+            self.parent_class = self.parent_class + curr_component
+
+        # Return the parent class calling iterator when component is finished.
+        return self.parent_class
 
 
 # -----------------------------------
@@ -284,3 +329,50 @@ def from_response(response: Response):
 
 def permute(items: List[str]):
     return set(permutations(items))
+
+
+# Function to parse the CSV and dynamically create data classes
+def data(file_path: str) -> List[Any]:
+    # Read the first row to get the headers
+    with open(file_path, mode='r') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        headers = csv_reader.fieldnames
+        if not headers:
+            raise ValueError("CSV file has no headers.")
+
+        # Create a data class with attributes based on the headers
+        DataRow = make_dataclass("DataRow", [(header, Any) for header in headers])
+
+        # Parse each row into an instance of the dynamically created data class
+        data_rows = []
+        for row in csv_reader:
+            # Convert the row values to the appropriate types (e.g., int, float, bool)
+            data = {key: _convert_value(value) for key, value in row.items()}
+            data_row = DataRow(**data)
+            data_rows.append(data_row)
+
+    return data_rows
+
+
+def _convert_value(value: str) -> Any:
+    """Helper function to convert string values to appropriate data types."""
+    value = value.strip()
+    if value.lower() == "true":
+        return True
+    elif value.lower() == "false":
+        return False
+    try:
+        if '.' in value:
+            return float(value)
+        else:
+            return int(value)
+    except ValueError:
+        return value  # Return as string if it cannot be converted
+
+
+def extract_datum_value(text: str) -> str:
+    # Use regex to match 'datum:thing' and capture 'thing'
+    match = re.match(r'^datum:(\w+)$', text)
+    if match:
+        return match.group(1)  # Return the captured part (i.e., 'thing')
+    return None  # Return None if the pattern doesn't match
