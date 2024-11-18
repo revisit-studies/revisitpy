@@ -26,12 +26,12 @@ my_study = rvt.study(
 )
 
 # Initialize base components to copy from.
-base_question_1 = rvt.component(__name__='base_component_1', **metadata.base_component_1_data)
-base_question_2 = rvt.component(__name__='base_component_2', **metadata.base_component_2_data)
-base_question_3 = rvt.component(__name__='base_component_3', **metadata.base_component_3_data)
+base_question_1 = rvt.component(component_name__='base_component_1', **metadata.base_component_1_data)
+base_question_2 = rvt.component(component_name__='base_component_2', **metadata.base_component_2_data)
+base_question_3 = rvt.component(component_name__='base_component_3', **metadata.base_component_3_data)
 
 # Create blank introduction component.
-introduction = rvt.component(__name__='introduction', type='Markdown')
+introduction = rvt.component(component_name__='introduction', type='Markdown')
 
 # Initialize an outer sequence with the introduction component
 final_sequence = rvt.sequence(order='fixed', components=[introduction])
@@ -51,9 +51,9 @@ for key, curr_options in metadata.options.items():
         # 'edit_response' and 'response_context' all rely on method chaining.
         curr_question_1 = rvt.component(
             # Set a name -- this will be used as a key
-            __name__=f'{key.lower()}-{question_type}-question-1',
+            component_name__=f'{key.lower()}-{question_type}-question-1',
             # Inherit base
-            base=base_question_1,
+            base__=base_question_1,
             # Overload path and correctAnswer
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
             correctAnswer=metadata.correct_answers[key],
@@ -74,8 +74,8 @@ for key, curr_options in metadata.options.items():
 
         # Question 2
         curr_question_2 = rvt.component(
-            __name__=f'{key.lower()}-{question_type}-question-2',
-            base=base_question_2,
+            component_name__=f'{key.lower()}-{question_type}-question-2',
+            base__=base_question_2,
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
             description=metadata.question_type_data[question_type]['description']
         ).response_context(
@@ -84,8 +84,8 @@ for key, curr_options in metadata.options.items():
 
         # Question 3
         curr_question_3 = rvt.component(
-            __name__=f'{key.lower()}-{question_type}-question-3',
-            base=base_question_3,
+            component_name__=f'{key.lower()}-{question_type}-question-3',
+            base__=base_question_3,
             path=f"Upset-Alttext-User-Survey/assets/{key}{question_type}.md",
             description=metadata.question_type_data[question_type]['description']
         ).responses([
@@ -134,4 +134,4 @@ final_sequence = final_sequence + inner_sequence
 # Assign sequence to study
 my_study.sequence = final_sequence
 
-my_study.save('config.json')
+my_study.save('data/upset/config.json')

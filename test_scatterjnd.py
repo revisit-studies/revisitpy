@@ -6,7 +6,7 @@ study_metadata = rvt.studyMetadata(**metadata.study_metadata)
 ui_config = rvt.uiConfig(**metadata.ui_config)
 
 # Get parameter data from CSV file
-study_data = rvt.data('revisit-py/data/scatterjnd/data.csv')
+study_data = rvt.data('data/scatterjnd/data.csv')
 
 # Response context can be omitted here since there is only one response total.
 # Using here for example sake -- common to set all to required and all have same location.
@@ -25,25 +25,25 @@ jnd_study = rvt.study(
 
 # Create basic components -- pulling in info from metadata file.
 introduction = rvt.component(
-    __name__='introduction',
+    component_name__='introduction',
     **metadata.introduction
 )
 training = rvt.component(
-    __name__='training',
+    component_name__='training',
     **metadata.training
 )
 practice = rvt.component(
-    __name__='practice',
+    component_name__='practice',
     **metadata.practice
 )
 begin = rvt.component(
-    __name__='begin',
+    component_name__='begin',
     **metadata.practice
 )
 
 # Initialize base component with one response
 base_component = rvt.component(
-    __name__='base-component-1',
+    component_name__='base-component-1',
     type='react-component',
     path='emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx'
 ).responses([
@@ -61,14 +61,16 @@ base_component = rvt.component(
 inner_sequence = rvt.sequence(
     order='random'
 ).from_data(study_data).component(
-    base=base_component,
-    __name__='datum:id',
+    base__=base_component,
+    component_name__='datum:id',
     parameters={
         'r1': 'datum:r1',
         'r2': 'datum:r2',
         'above': 'datum:position'
     }
 )
+
+
 
 # Initialize sequence
 sequence = rvt.sequence(
@@ -89,4 +91,4 @@ sequence = rvt.sequence(
 jnd_study.sequence = sequence
 
 # Save file
-jnd_study.save('revisit-py/data/scatterjnd/config.json')
+jnd_study.save('data/scatterjnd/config.json')
