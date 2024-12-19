@@ -28,6 +28,7 @@ introduction = rvt.component(
     component_name__='introduction',
     **metadata.introduction
 )
+
 training = rvt.component(
     component_name__='training',
     **metadata.training
@@ -69,7 +70,6 @@ inner_sequence = rvt.sequence(
         'above': 'datum:position'
     }
 )
-
 
 
 # Initialize sequence

@@ -48,8 +48,6 @@ practice = {
         {
             "id": "completed",
             "prompt": "Did you complete the practice?",
-            "required": True,
-            "location": "aboveStimulus",
             "type": "iframe",
             "hidden": True
         }

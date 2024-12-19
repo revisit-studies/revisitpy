@@ -127,7 +127,7 @@ class Response(BaseModel):
     def data(self, overwrite=True, **kwargs):
         for key, value in kwargs.items():
             if key != 'base':
-                if overwrite is True or (overwrite is False and not hasattr(self, key)):
+                if overwrite is True or (overwrite is False and getattr(self, key) is None):
                     setattr(self, key, value)
         return self
 
