@@ -1,0 +1,53 @@
+.revisit_notebook_widget button {
+	background: #f0f0f0;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	font-family: "Roboto", sans-serif;
+	font-size: 1em;
+	margin: 5px;
+	padding: 5px 10px;
+	transition: box-shadow 0.25s ease-in-out;
+
+	&:hover {
+		background: #e0e0e0;
+		box-shadow: 0 0 5px 0 #ccc;
+	}
+
+	&:active {
+		background: #d0d0d0;
+		box-shadow: 0 0 5px 0 #ccc inset;
+
+	}
+}
+
+.revisit_notebook_widget iframe {
+	border: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.revisit_notebook_widget {
+	.sequence {
+		width: 100%;
+		display: flex;
+	}
+
+	.sequenceComponent {
+		display: flex;
+		padding-left: 4px;
+		padding-right: 4px;
+		padding-bottom: 2px;
+
+		&:hover {
+			background: rgba(0,0,0,.1);
+		}
+	}
+
+	.sequenceComponentIndividual {
+		background: #000000;
+		width: 5px;
+		height: 20px;
+		margin-top: 5px;
+	}
+}
