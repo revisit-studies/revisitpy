@@ -1,4 +1,4 @@
-import revisit as rvt
+import old.revisit_alpha as rvt
 import data.upset.metadata as metadata
 
 '''

@@ -1,204 +1,78 @@
 from __future__ import annotations
-from typing import List, Any, Optional, Union
 import json
-import copy
-from itertools import permutations
+import models as rvt_models
+from pydantic import BaseModel, ValidationError  # type: ignore
+from typing import List, Literal, get_origin, Optional, get_args, Any, Unpack, overload, get_type_hints
+from enum import Enum
 import csv
 from dataclasses import make_dataclass
 import re
-from pydantic import BaseModel, ValidationError, ConfigDict
 
 
-class Study:
-    """Study Class"""
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        if hasattr(self, 'sequence'):
-            self.components_raw__ = self.sequence.get_components()
-            # Creates dict object using the given name as the key and the jsonified object as the value.
-            self.components = json.dumps(
-                {f"{comp.component_name__}": json.loads(comp.json()) for comp in self.components_raw__}, indent=4
-            )
-
+class _JSONableBaseModel(BaseModel):
     def __str__(self):
-        return str(self.json())
-
-    def json(self):
-        current_dict = {}
-
-        if hasattr(self, 'sequence'):
-            self.components_raw__ = self.sequence.get_components()
-
-            # Apply response context to each response in each component
-            if hasattr(self, 'context__') and getattr(self, 'context__') is not None:
-                for type, data in self.context__.items():
-                    for comp in self.components_raw__:
-                        if comp.response is not None and len(comp.response) > 0:
-                            for response in comp.response:
-                                if response.type == type or type == 'all':
-                                    response.data(
-                                        overwrite=False,
-                                        **data
-                                    )
-
-            self.components = json.dumps(
-                {f"{comp.component_name__}": json.loads(comp.json()) for comp in self.components_raw__}, indent=4
-            )
-
-        for attr, value in vars(self).items():
-            if not attr.endswith('__'):
-                if isinstance(value, UIConfig):
-                    value = json.loads(value.json())
-                if isinstance(value, Sequence):
-                    value = json.loads(value.json())
-                if isinstance(value, StudyMetadata):
-                    value = json.loads(value.json())
-                if attr == 'components':
-                    value = json.loads(value)
-
-                current_dict[attr] = value
-        return json.dumps(current_dict, indent=4)
-
-    def response_context(self, **kwargs):
-        self.context__ = kwargs
-        return self
-
-    def save(self, file_path):
-        """Save the object data to a file in JSON format."""
-        with open(file_path, 'w') as json_file:
-            json.dump(json.loads(self.json()), json_file, indent=4)
-        print(f"Wrote study config to {file_path}")
+        return json.dumps(
+            json.loads(
+                self.root.model_dump_json(
+                    exclude_none=True, by_alias=True
+                )),
+            indent=4
+        )
 
 
-class TopLevel:
-    def __init__(self, **kwargs):
+# Private
+class _WrappedResponse(_JSONableBaseModel):
+    root: rvt_models.Response
+
+    def model_post_init(self, __context: Any) -> None:
+        # Sets the root to be the instantiation of the individual response type instead
+        # of the union response type
+        self.root = self.root.root
+
+    def set(self, overwrite=True, **kwargs) -> _WrappedResponse:
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            # Disallow changing type
+            if key == 'type':
+                if getattr(self.root, key) != value:
+                    raise RevisitError(message=f"Cannot change type from {getattr(self.root, key)} to {value}")
+            elif key != 'base':
+                if overwrite is True or (overwrite is False and getattr(self.root, key) is None):
+                    setattr(self.root, key, value)
 
-    def __str__(self):
-        return str(self.json())
-
-    def json(self):
-        current_dict = {}
-        for attr, value in vars(self).items():
-            current_dict[attr] = value
-
-        return json.dumps(current_dict, indent=4)
-
-
-class Response(BaseModel):
-
-    """Parameters that response will receive and pass to JSON"""
-    id: str
-    base__: Optional[Response] = None
-    prompt: Optional[str] = None
-    secondaryText: Optional[str] = None
-    required: Optional[bool] = None
-    location: Optional[str] = None
-    requiredValue: Optional[Any] = None
-    requiredLabel: Optional[str] = None
-    paramCapture: Optional[str] = None
-    hidden: Optional[bool] = None
-    type: Optional[str] = None
-    options: Optional[List[Union[dict, str]]] = None
-    placeholder: Optional[str] = None
-    min: Optional[int] = None
-    max: Optional[int] = None
-    numItems: Optional[int] = None
-    leftLabel: Optional[str] = None
-    rightLabel: Optional[str] = None
-
-    def model_post_init(self, __context):
-
-        # Inherit Base
-        if self.base__:
-            for key, value in vars(self.base__).items():
-                if key in self.__annotations__:
-                    setattr(self, key, copy.deepcopy(value))
-
-    def __str__(self):
-        return str(self.json())
-
-    def json(self):
-        return _jsonify(self)
-
-    def data(self, overwrite=True, **kwargs):
-        for key, value in kwargs.items():
-            if key != 'base':
-                if overwrite is True or (overwrite is False and getattr(self, key) is None):
-                    setattr(self, key, value)
+        # Re-validates the model. Returns the new model.
+        self.root = _validate_response(self.root.__dict__)
         return self
 
 
-class Component(BaseModel):
-
+# Private
+class _WrappedComponent(_JSONableBaseModel):
     component_name__: str
-    base__: Optional[Component] = None
+    base__: Optional[_WrappedComponent] = None
     context__: Optional[dict] = None
-    nextButtonText: Optional[str] = None
-    nextButtonLocation: Optional[str] = None
-    instructionLocation: Optional[str] = None
-    correctAnswer: Optional[List[Any]] = None
-    provideFeedback: Optional[bool] = None
-    trainingAttempts: Optional[int] = None
-    allowFailedTraining: Optional[bool] = None
-    meta: Optional[dict] = None
-    description: Optional[str] = None
-    instruction: Optional[str] = None
-    response: Optional[List[Union[Response, dict]]] = None
-    type: Optional[str] = None
-    path: Optional[str] = None
-    parameters: Optional[dict] = None
+    root: rvt_models.IndividualComponent
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    def model_post_init(self, __context: Any) -> None:
+        # Sets the root to be the instantiation of the individual response type instead
+        # of the union response type
+        self.root = self.root.root
 
-    def model_post_init(self, __context):
-        # Inherit Base
-        if self.base__:
-            for key, value in vars(self.base__).items():
-                if key in self.__annotations__ and getattr(self, key) is None:
-                    setattr(self, key, copy.deepcopy(value))
-
-        # Convert any dictionary passed in as response to proper response class.
-        if self.response and type(self.response) is list:
-            _responses = []
-            for _response in self.response:
-                if not isinstance(_response, Response):
-                    _response = Response(**_response)
-                _responses.append(_response)
-            self.response = _responses
-
-    def __str__(self):
-        return str(self.json())
-
-    def __add__(self, other):
-        if isinstance(other, Response):
-            self.response.append(other)
-            return self
-        return NotImplemented
-
-    def json(self):
-        return _jsonify(self)
-
-    def responses(self, responses: List[Response]) -> None:
+    def responses(self, responses: List[_WrappedResponse]) -> _WrappedComponent:
         for item in responses:
-            if not isinstance(item, Response):
+            if not isinstance(item, _WrappedResponse):
                 raise ValueError(f'Expecting type Response got {type(item)}')
-        self.response = responses
+        self.root.response = responses
         return self
 
-    def get_response(self, id: str) -> Response | None:
-        for response in self.response:
-            if response.id == id:
+    def get_response(self, id: str) -> _WrappedResponse | None:
+        for response in self.root.response:
+            if response.root.id == id:
                 return response
         return None
 
-    def edit_response(self, id: str, **kwargs) -> Component:
-        for response in self.response:
-            if response.id == id:
-                response.data(**kwargs)
+    def edit_response(self, id: str, **kwargs) -> _WrappedComponent:
+        for response in self.root.response:
+            if response.root.id == id:
+                response.set(**kwargs)
                 return self
 
         raise ValueError('No response with given ID found.')
@@ -207,9 +81,9 @@ class Component(BaseModel):
         self.context__ = kwargs
 
         for type, data in self.context__.items():
-            for response in self.response:
-                if response.type == type or type == 'all':
-                    response.data(
+            for response in self.root.response:
+                if response.root.type == type or type == 'all':
+                    response.set(
                         overwrite=False,
                         **data
                     )
@@ -217,53 +91,40 @@ class Component(BaseModel):
         return self
 
 
-Component.model_rebuild()
+class _WrappedStudyMetadata(_JSONableBaseModel):
+    root: rvt_models.StudyMetadata
 
 
-class Sequence(BaseModel):
-    """Sequence Class"""
-    order: str = 'fixed'
-    components: Optional[List[Union[Component, Sequence]]] = []
+class _WrappedUIConfig(_JSONableBaseModel):
+    root: rvt_models.UIConfig
+
+
+class _WrappedComponentBlock(_JSONableBaseModel):
+    root: rvt_models.ComponentBlock
+    component_objects__: List[_WrappedComponent]
 
     def __add__(self, other):
         """Allows addition operator to append to sequence components list."""
-        if isinstance(other, Sequence) or isinstance(other, Component):
-            self.components.append(other)
+        if isinstance(other, _WrappedComponentBlock) or isinstance(other, _WrappedComponent):
+            self.component_objects__.append(other)
+            self.root.components.append(other.component_name__)
             return self
         return NotImplemented
-
-    def __str__(self):
-        return str(self.json())
-
-    def json(self):
-        """Custom JSON Method"""
-        components_data = [
-            item.component_name__ if isinstance(item, Component)
-            else json.loads(item.json()) for item in self.components
-        ]
-
-        current_dict = {
-            'order': self.order,
-            'components': components_data
-        }
-
-        return json.dumps(current_dict, indent=4)
-
-    def get_components(self, component_list: List[Component] = []):
-        for comp in self.components:
-            if isinstance(comp, Component):
-                component_list.append(comp)
-            elif isinstance(comp, Sequence):
-                comp.get_components(component_list)
-
-        return component_list
 
     def from_data(self, data_list: list):
         return DataIterator(data_list, self)
 
 
+class _WrappedStudyConfig(_JSONableBaseModel):
+    root: rvt_models.StudyConfig
+
+
+class _StudyConfigType(rvt_models.StudyConfigType):
+    components: List[_WrappedComponent]
+
+
 class DataIterator:
-    def __init__(self, data_list: List, parent_class: Sequence):
+    def __init__(self, data_list: List, parent_class: _WrappedComponentBlock):
         self.data = data_list
         self.parent_class = parent_class
 
@@ -295,74 +156,181 @@ class DataIterator:
                             current_dict[key] = value
                     else:
                         current_dict[key] = value
-            curr_component = Component(**current_dict)
+            curr_component = component(**current_dict)
             self.parent_class = self.parent_class + curr_component
-
         # Return the parent class calling iterator when component is finished.
         return self.parent_class
 
 
-class Checkbox(Response):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.type = 'checkbox'
+# # -----------------------------------
+# # Factory Functions
+# # -----------------------------------
+
+# Component factory function
+# Allows additional items to be sent over to our Component model while keeping restrictions
+# for the model that is auto-generated.
+
+@overload
+def component(**kwargs: Unpack[rvt_models.MarkdownComponentType]) -> _WrappedComponent: ...
+@overload
+def component(**kwargs: Unpack[rvt_models.ReactComponentType]) -> _WrappedComponent: ...
+@overload
+def component(**kwargs: Unpack[rvt_models.ImageComponentType]) -> _WrappedComponent: ...
+@overload
+def component(**kwargs: Unpack[rvt_models.WebsiteComponentType]) -> _WrappedComponent: ...
+@overload
+def component(**kwargs: Unpack[rvt_models.QuestionnaireComponentType]) -> _WrappedComponent: ...
+@overload
+def component(**kwargs: Any) -> _WrappedComponent: ...
 
 
-class StudyMetadata(TopLevel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+def component(**kwargs) -> _WrappedComponent:
+    # Inherit base
+    base_component = kwargs.get('base__', None)
+    if base_component:
+        base_fields = vars(base_component.root)
+        for key, value in base_fields.items():
+            if key not in kwargs:
+                kwargs[key] = value
+    # Get kwargs to pass to individual component
+    filter_kwargs = _get_filtered_kwargs(rvt_models.IndividualComponent, kwargs)
+    # Grab response list
+    response = filter_kwargs.get('response')
+
+    # Sets default response list
+    valid_response = []
+    # If response present
+    if response is not None:
+        for r in response:
+
+            # Prevent dict input
+            if isinstance(r, dict):
+                raise RevisitError(message='Cannot pass a dictionary directly into "Response" list.')
+
+            response_type_hint = get_type_hints(rvt_models.Response).get('root')
+            response_types = get_args(response_type_hint)
+
+            # If wrapped, get root
+            if isinstance(r, _WrappedResponse):
+                valid_response.append(r.root)
+
+            # If not wrapped but is valid response, append to list
+            elif r.__class__ in response_types:
+                valid_response.append(r)
+
+            # If other unknown type, raise error
+            else:
+                raise RevisitError(message=f'Invalid type {type(r)} for "Response" class.')
+
+    filter_kwargs['response'] = valid_response
+
+    # Validate component
+    _validate_component(filter_kwargs)
+    base_model = rvt_models.IndividualComponent(**filter_kwargs)
+
+    try:
+        return _WrappedComponent(**kwargs, root=base_model)
+    except ValidationError as e:
+        raise RevisitError(e.errors())
 
 
-class UIConfig(TopLevel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+# Response factory function
+@overload
+def response(**kwargs: Unpack[rvt_models.NumericalResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.ShortTextResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.LongTextResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.LikertResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.DropdownResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.SliderResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.RadioResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.CheckboxResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.IFrameResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Unpack[rvt_models.MatrixResponseType]) -> _WrappedResponse: ...
+@overload
+def response(**kwargs: Any) -> _WrappedResponse: ...
 
 
-class Components(TopLevel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+def response(**kwargs) -> _WrappedResponse:
+    filter_kwargs = _get_filtered_kwargs(rvt_models.Response, kwargs)
+    _validate_response(filter_kwargs)
+    base_model = rvt_models.Response(**filter_kwargs)
+    # We've validated the response for a particular type. Now, how do we validate the wrapped component correctly?
+    try:
+        return _WrappedResponse(**kwargs, root=base_model)
+    except ValidationError as e:
+        raise RevisitError(e.errors())
 
 
-# -----------------------------------
-# Factory Functions
-# -----------------------------------
-def component(**kwargs):
-    return Component(**kwargs)
+def studyMetadata(**kwargs: Unpack[rvt_models.StudyMetadataType]):
+    filter_kwargs = _get_filtered_kwargs(rvt_models.StudyMetadata, kwargs)
+    base_model = rvt_models.StudyMetadata(**filter_kwargs)
+    return _WrappedStudyMetadata(**kwargs, root=base_model)
 
 
-def response(**kwargs):
-    return Response(**kwargs)
+def uiConfig(**kwargs: Unpack[rvt_models.UIConfigType]):
+    filter_kwargs = _get_filtered_kwargs(rvt_models.UIConfig, kwargs)
+    base_model = rvt_models.UIConfig(**filter_kwargs)
+    return _WrappedUIConfig(**kwargs, root=base_model)
 
 
-def sequence(**kwargs):
-    return Sequence(**kwargs)
+def sequence(**kwargs: Unpack[rvt_models.ComponentBlockType]):
+    filter_kwargs = _get_filtered_kwargs(rvt_models.ComponentBlock, kwargs)
+    valid_component_names = []
+    valid_components = []
+    components = filter_kwargs.get('components')
+    if components is not None:
+        for c in components:
+
+            # Prevent dict input
+            if isinstance(c, dict):
+                raise RevisitError(message='Cannot pass a dictionary directly into "Component" list.')
+
+            # If wrapped, get root
+            if isinstance(c, _WrappedComponent):
+                valid_component_names.append(c.component_name__)
+                valid_components.append(c)
+
+            # If other unknown type, raise error
+            else:
+                raise RevisitError(message=f'Invalid type {type(c)} for "Component" class.')
+
+    filter_kwargs['components'] = valid_component_names
+    base_model = rvt_models.ComponentBlock(**filter_kwargs)
+    return _WrappedComponentBlock(**kwargs, root=base_model, component_objects__=valid_components)
 
 
-def study(**kwargs):
-    return Study(**kwargs)
+@overload
+def studyConfig(**kwargs: Unpack[_StudyConfigType]) -> _WrappedStudyConfig: ...
+@overload
+def studyConfig(**kwargs: Any) -> _WrappedStudyConfig: ...
 
 
-def studyMetadata(**kwargs):
-    return StudyMetadata(**kwargs)
+def studyConfig(**kwargs: Unpack[_StudyConfigType]) -> _WrappedStudyConfig:
+    filter_kwargs = _get_filtered_kwargs(rvt_models.StudyConfig, kwargs)
 
+    root_list = ['studyMetadata', 'uiConfig', 'sequence']
+    un_rooted_kwargs = {x: (y.root if x in root_list and hasattr(y, 'root') else y) for x, y in filter_kwargs.items()}
 
-def uiConfig(**kwargs):
-    return UIConfig(**kwargs)
+    study_sequence = filter_kwargs['sequence']
 
+    # Merges components from the components list given and the components that are stored in the sequence
+    un_rooted_kwargs['components'] = {
+        comp.component_name__: comp.root for comp in un_rooted_kwargs.get('components', [])
+    } | {
+        comp.component_name__: comp.root for comp in study_sequence.component_objects__
+    }
 
-def checkbox(**kwargs):
-    return Checkbox(**kwargs)
-
-# -----------------------------------
-# -----------------------------------
-
-
-def from_response(response: Response):
-    return copy.deepcopy(response)
-
-
-def permute(items: List[str]):
-    return set(permutations(items))
+    base_model = rvt_models.StudyConfig(**un_rooted_kwargs)
+    return _WrappedStudyConfig(**kwargs, root=base_model)
 
 
 # Function to parse the CSV and dynamically create data classes
@@ -372,7 +340,7 @@ def data(file_path: str) -> List[Any]:
         csv_reader = csv.DictReader(csvfile)
         headers = csv_reader.fieldnames
         if not headers:
-            raise ValueError("CSV file has no headers.")
+            raise RevisitError(message="No headers found in CSV file.")
 
         # Create a data class with attributes based on the headers
         DataRow = make_dataclass("DataRow", [(header, Any) for header in headers])
@@ -386,6 +354,147 @@ def data(file_path: str) -> List[Any]:
             data_rows.append(data_row)
 
     return data_rows
+
+
+# ------- PRIVATE FUNCTIONS ------------ #
+
+def _validate_component(kwargs: dict):
+    component_mapping = _generate_possible_component_types()[1]
+    if 'type' not in kwargs:
+        raise RevisitError(message='"Type" is required on Component.')
+    elif component_mapping.get(kwargs['type']) is None:
+        raise RevisitError(message=f'Unexpected component type: {kwargs['type']}')
+
+    try:
+        return rvt_models.IndividualComponent.model_validate(kwargs).root
+    except ValidationError as e:
+        temp_errors = []
+
+        for entry in e.errors():
+            if entry['loc'][0] == component_mapping[kwargs['type']]:
+                temp_errors.append(entry)
+
+        if len(temp_errors) > 0:
+            raise RevisitError(temp_errors)
+        else:
+            raise RevisitError(
+                message='Unexpected error occurred during Component instantiation.'
+            )
+
+
+# Call validate response when creating response component.
+def _validate_response(kwargs: dict):
+    response_mapping = _generate_possible_response_types()[1]
+    if 'type' not in kwargs:
+        raise RevisitError(message='"Type" is required on Response.')
+    else:
+
+        type_value = kwargs.get('type')
+
+        # Handles enum class type
+        if isinstance(kwargs.get('type'), Enum):
+            type_value = type_value.value
+
+        if response_mapping.get(type_value) is None:
+            raise RevisitError(message=f'Unexpected type: {type_value}')
+
+        try:
+            return rvt_models.Response.model_validate(kwargs).root
+        except ValidationError as e:
+            temp_errors = []
+            for entry in e.errors():
+                if entry['loc'][0] == response_mapping[type_value]:
+                    temp_errors.append(entry)
+
+            if len(temp_errors) > 0:
+                raise RevisitError(temp_errors)
+            else:
+                raise RevisitError(
+                    message='Unexpected error occurred during Response instantiation'
+                )
+
+
+def _generate_possible_response_types():
+    return _generate_possible_types(rvt_models.Response)
+
+
+def _generate_possible_component_types():
+    return _generate_possible_types(rvt_models.IndividualComponent)
+
+
+# Generates mappings between the response class name and the
+# type string literal. Creates the reversed mapping as well.
+def _generate_possible_types(orig_cls):
+    response_type_hint = get_type_hints(orig_cls).get('root')
+    response_types = get_args(response_type_hint)
+    type_hints = {}
+    type_hints_reversed = {}
+    for cls in response_types:
+        curr_type = get_type_hints(cls).get('type')
+        curr_origin = get_origin(get_type_hints(cls).get('type'))
+        if curr_origin is Literal:
+            type_hints[cls.__name__] = set([get_args(curr_type)[0]])
+            type_hints_reversed[get_args(curr_type)[0]] = cls.__name__
+        elif isinstance(curr_type, type) and issubclass(curr_type, Enum):
+            enum_list = [member.value for member in curr_type]
+            type_hints[cls.__name__] = set(enum_list)
+            for item in enum_list:
+                type_hints_reversed[item] = cls.__name__
+
+    return (type_hints, type_hints_reversed)
+
+
+# Custom exception
+class RevisitError(Exception):
+    def __init__(self, errors=None, message=None):
+        # Case 1: Validation Errors From Pydantic
+        # Case 2: Standard Error Message
+        super().__init__('There was an error.')
+        if message is None:
+            pretty_message_list = pretty_error(errors)
+            self.message = \
+                f'There was an error. \n' \
+                f'----------------------------------------------------' \
+                f'\n\n' \
+                f'{'\n\n'.join(pretty_message_list)}' \
+                f'\n'
+        else:
+            self.message = \
+                f'There was an error. \n' \
+                f'----------------------------------------------------' \
+                f'\n\n' \
+                f'{message}' \
+                f'\n'
+
+    def __str__(self):
+        return self.message
+
+
+def pretty_error(errors):
+    custom_messages = {
+        'missing': 'Field is missing'
+    }
+    new_error_messages = []
+    for error in errors:
+        custom_message = custom_messages.get(error['type'])
+        if custom_message:
+            new_error_messages.append(f'Location: {error['loc']}\nError: Field "{error['loc'][-1]}" is required.')
+        else:
+            new_error_messages.append(f'Location: {error['loc']}\nError: {error['msg']}')
+    return new_error_messages
+
+
+def _get_filtered_kwargs(class_type: Any, kwargs):
+    try:
+        possible_items = get_args(class_type.__fields__.get('root').annotation)
+    except AttributeError:
+        possible_items = [class_type]
+
+    valid_fields = set()
+    for model in possible_items:
+        valid_fields.update(model.model_fields.keys())
+
+    return {key: value for key, value in kwargs.items() if key in valid_fields}
 
 
 def _convert_value(value: str) -> Any:
@@ -402,22 +511,6 @@ def _convert_value(value: str) -> Any:
             return int(value)
     except ValueError:
         return value  # Return as string if it cannot be converted
-
-
-# Consider removing this. It might be easier to write out individual JSON Methods for each class.
-def _jsonify(_class: any):
-    current_dict = {}
-    for attr, value in vars(_class).items():
-        if not attr.endswith('__') and value is not None:
-            if isinstance(value, list):
-                json_list = []
-                for entry in value:
-                    if hasattr(entry, "json") and callable(getattr(entry, "json")):
-                        entry = json.loads(entry.json())
-                    json_list.append(entry)
-                value = json_list
-            current_dict[attr] = value
-    return json.dumps(current_dict, indent=4)
 
 
 def _extract_datum_value(text: str) -> str:
