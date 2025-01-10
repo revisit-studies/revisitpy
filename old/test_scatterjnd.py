@@ -1,4 +1,4 @@
-import revisit as rvt
+import old.revisit_alpha as rvt
 import data.scatterjnd.metadata as metadata
 
 
@@ -28,6 +28,7 @@ introduction = rvt.component(
     component_name__='introduction',
     **metadata.introduction
 )
+
 training = rvt.component(
     component_name__='training',
     **metadata.training
@@ -69,7 +70,6 @@ inner_sequence = rvt.sequence(
         'above': 'datum:position'
     }
 )
-
 
 
 # Initialize sequence
