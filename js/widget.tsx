@@ -133,7 +133,6 @@ const render = createRender(() => {
 
   return (
     <div className="revisit_notebook_widget">
-      <Sequence d={config.sequence} participantSequences={sequences} />
       <iframe
         ref={ref}
         src="http://localhost:8080/revisit-widget"
