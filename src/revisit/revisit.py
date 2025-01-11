@@ -58,6 +58,9 @@ class _WrappedResponse(_JSONableBaseModel):
         self.root = _validate_response(self.root.__dict__)
         return self
 
+    def clone(self):
+        return response(**self.root.__dict__)
+
 
 # Private
 class _WrappedComponent(_JSONableBaseModel):
@@ -85,9 +88,20 @@ class _WrappedComponent(_JSONableBaseModel):
         return None
 
     def edit_response(self, id: str, **kwargs) -> _WrappedComponent:
-        for response in self.root.response:
-            if response.root.id == id:
-                response.set(**kwargs)
+        print(self.root.response)
+        for r in self.root.response:
+            if r.root.id == id:
+                # Get dict 
+                response_dict = r.root.__dict__
+                # Create new response
+                new_response = response(**response_dict)
+                # Set with new values
+                new_response.set(**kwargs)
+                # Filter out old response
+                self.root.response = [_r for _r in self.root.response if _r.root.id != id]
+                # Add new response
+                self.root.response.append(new_response)
+                # Return component
                 return self
 
         raise ValueError('No response with given ID found.')
@@ -104,6 +118,9 @@ class _WrappedComponent(_JSONableBaseModel):
                     )
 
         return self
+
+    def clone(self, component_name__):
+        return component(**self.root.__dict__, component_name__=component_name__)
 
 
 class _WrappedStudyMetadata(_JSONableBaseModel):

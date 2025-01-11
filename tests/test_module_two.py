@@ -20,6 +20,7 @@ newResponse = rvt.response(
     questionOptions=['Test1', 'Test2']
 )
 
+
 base_comp = rvt.component(
     type='questionnaire',
     response=[],
@@ -111,7 +112,7 @@ base_component = rvt.component(
 
 study_data = rvt.data('data/data.csv')
 
-sequence = rvt.sequence(order='random').from_data('study_data').component(
+sequence = rvt.sequence(order='random').from_data(study_data).component(
     base__=base_component,
     component_name__='datum:id',
     parameters={
@@ -140,4 +141,13 @@ study = rvt.studyConfig(
     components=[rvt.component(component_name__='my-test-thing', type='questionnaire', response=[])]
 )
 
-print(study)
+
+
+nextResponse = newResponse.clone()
+nextResponse.set(required=True)
+# print(newResponse)
+# print(nextResponse)
+
+comp_seven = comp_one.clone(component_name__='comp_seven').edit_response(id='hello', questionOptions=['TestFour'])
+print(comp_seven)
+print(comp_one)
