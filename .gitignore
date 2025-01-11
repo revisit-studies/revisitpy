@@ -1,4 +1,10 @@
+node_modules
 .venv
-*.pyc
-config.json
-__pycache__/
+dist
+.DS_Store
+
+# Python
+__pycache__
+.ipynb_checkpoints
+
+src/revisit/static

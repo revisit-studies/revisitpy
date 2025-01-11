@@ -1,0 +1,410 @@
+{
+    "studyMetadata": {
+        "title": "Scatter Plot JND Study",
+        "version": "pilot",
+        "authors": [
+            "The reVISit Team"
+        ],
+        "date": "2024-06-26",
+        "description": "This is a reVISit variation study of JND(Just Noticeable Difference) Scatter Plot experiment.",
+        "organizations": [
+            "University of Utah",
+            "WPI",
+            "University of Toronto"
+        ]
+    },
+    "uiConfig": {
+        "contactEmail": "contact@revisit.dev",
+        "helpTextPath": "ScatterJND-study/assets/help.md",
+        "logoPath": "revisitAssets/revisitLogoSquare.svg",
+        "withProgressBar": true,
+        "autoDownloadStudy": false,
+        "sidebar": false,
+        "urlParticipantIdParam": "PROLIFIC_PID",
+        "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [yourProlificLink](yourProlificLink)"
+    },
+    "sequence": {
+        "order": "fixed",
+        "components": [
+            "introduction",
+            "training",
+            "practice",
+            "begin",
+            {
+                "order": "random",
+                "components": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16"
+                ]
+            }
+        ]
+    },
+    "components": {
+        "introduction": {
+            "response": [
+                {
+                    "id": "prolificId",
+                    "prompt": "Please enter your Prolific ID",
+                    "required": true,
+                    "location": "belowStimulus",
+                    "paramCapture": "PROLIFIC_PID",
+                    "type": "shortText",
+                    "placeholder": "Prolific ID"
+                }
+            ],
+            "type": "markdown",
+            "path": "ScatterJND-study/assets/introduction.md"
+        },
+        "training": {
+            "response": [],
+            "type": "markdown",
+            "path": "ScatterJND-study/assets/training.md"
+        },
+        "practice": {
+            "response": [
+                {
+                    "id": "completed",
+                    "prompt": "Did you complete the practice?",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/PracticeScatter.tsx"
+        },
+        "begin": {
+            "response": [
+                {
+                    "id": "completed",
+                    "prompt": "Did you complete the practice?",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/PracticeScatter.tsx"
+        },
+        "1": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.1,
+                "r2": 0.6,
+                "above": true
+            }
+        },
+        "2": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.2,
+                "r2": 0.7,
+                "above": true
+            }
+        },
+        "3": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.2,
+                "r2": 0.1,
+                "above": false
+            }
+        },
+        "4": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.3,
+                "r2": 0.8,
+                "above": false
+            }
+        },
+        "5": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.3,
+                "r2": 0.1,
+                "above": false
+            }
+        },
+        "6": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.4,
+                "r2": 0.9,
+                "above": true
+            }
+        },
+        "7": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.4,
+                "r2": 0.2,
+                "above": false
+            }
+        },
+        "8": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.5,
+                "r2": 0.7,
+                "above": true
+            }
+        },
+        "9": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.5,
+                "r2": 0.3,
+                "above": false
+            }
+        },
+        "10": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.6,
+                "r2": 0.7,
+                "above": true
+            }
+        },
+        "11": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.6,
+                "r2": 0.4,
+                "above": false
+            }
+        },
+        "12": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.7,
+                "r2": 0.9,
+                "above": true
+            }
+        },
+        "13": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.7,
+                "r2": 0.5,
+                "above": false
+            }
+        },
+        "14": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.8,
+                "r2": 0.9,
+                "above": true
+            }
+        },
+        "15": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.8,
+                "r2": 0.4,
+                "above": false
+            }
+        },
+        "16": {
+            "response": [
+                {
+                    "id": "scatterSelections",
+                    "prompt": "Select an option",
+                    "required": true,
+                    "location": "aboveStimulus",
+                    "hidden": true,
+                    "type": "iframe"
+                }
+            ],
+            "type": "react-component",
+            "path": "emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx",
+            "parameters": {
+                "r1": 0.9,
+                "r2": 0.7,
+                "above": false
+            }
+        }
+    }
+}
