@@ -1,4 +1,4 @@
-import src.revisit as rvt
+import src.revisit.revisit as rvt
 
 if __name__ == "__main__":
     newResponse = rvt.response(
@@ -73,4 +73,4 @@ if __name__ == "__main__":
         test='hello'
     )
 
-    rvt.widget(studyConfig, '/Users/bbollen23/study')
+    print(studyConfig)
