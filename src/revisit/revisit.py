@@ -573,7 +573,7 @@ def pretty_error(errors):
 
 def _get_filtered_kwargs(class_type: Any, kwargs):
     try:
-        possible_items = get_args(class_type.__fields__.get('root').annotation)
+        possible_items = get_args(class_type.model_fields.get('root').annotation)
     except AttributeError:
         possible_items = [class_type]
 
