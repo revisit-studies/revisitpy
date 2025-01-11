@@ -19,23 +19,23 @@ function extractInterruptions(d: any) {
 
   // Recursive function to traverse the JSON object
   function traverse(node: any) {
-      // Check if the current node has interruptions
-      if (node.interruptions) {
-          node.interruptions.forEach((interruption: any) => {
-              if (interruption.components) {
-                  interruptions.push(...interruption.components);
-              }
-          });
-      }
+    // Check if the current node has interruptions
+    if (node.interruptions) {
+      node.interruptions.forEach((interruption: any) => {
+        if (interruption.components) {
+          interruptions.push(...interruption.components);
+        }
+      });
+    }
 
-      // Check if the current node has components and process them recursively
-      if (Array.isArray(node.components)) {
-          node.components.forEach((component: any) => {
-              if (typeof component === "object") {
-                  traverse(component);
-              }
-          });
-      }
+    // Check if the current node has components and process them recursively
+    if (Array.isArray(node.components)) {
+      node.components.forEach((component: any) => {
+        if (typeof component === "object") {
+          traverse(component);
+        }
+      });
+    }
   }
 
   // Start traversal from the root JSON object
@@ -48,7 +48,6 @@ const Sequence = ({ d, participantSequences }: { d: any, participantSequences: a
   const [participantSequencesCount, max, sum] = React.useMemo(() => {
     const r: { [key: string]: number } = {};
 
-    
     if (participantSequences.length) {
       const allStimuli = getFlattenedSequenceList(participantSequences).flat();
 
@@ -68,11 +67,6 @@ const Sequence = ({ d, participantSequences }: { d: any, participantSequences: a
         if (interruptions[i] in r) {
           delete r[interruptions[i]];
         }
-
-        // if (!r[interruptions[i]]) {
-        //   r[interruptions[i]] = 0;
-        // }
-        // r[interruptions[i]]++;
       }
 
     }
@@ -81,11 +75,8 @@ const Sequence = ({ d, participantSequences }: { d: any, participantSequences: a
 
     const max = Math.max(...Object.values(r));
 
-    // console.log(r, max, sum);
-    // console.log(d);
-
     return [r, max, sum];
-  
+
   }, [participantSequences]);
 
   return (<div className="sequence">
@@ -94,11 +85,10 @@ const Sequence = ({ d, participantSequences }: { d: any, participantSequences: a
 };
 
 const render = createRender(() => {
-  // TODO: replace with revisit configuration
   const [config] = useModelState<any>("config");
   const [iframeReady, setIframeReady] = React.useState(0);
+  const [page, setPage] = React.useState("study");
   const [sequences, setSequence] = useModelState<any>("sequence");
-
 
   const ref = React.useRef<HTMLIFrameElement>(null);
 
@@ -119,7 +109,6 @@ const render = createRender(() => {
       if (event.data.type === "revisitWidget/READY") {
         setIframeReady(i => i + 1);
       } else if (event.data.type === "revisitWidget/SEQUENCE_ARRAY") {
-        // console.log(event.data.payload);
         setSequence(event.data.payload);
       }
     };
@@ -133,9 +122,13 @@ const render = createRender(() => {
 
   return (
     <div className="revisit_notebook_widget">
+      <div>
+        <button onClick={() => { setPage("study"); }} disabled={page === "study"}>Study</button>
+        <button onClick={() => { setPage("analysis"); }} disabled={page === "analysis"}>Analysis</button>
+      </div>
       <iframe
         ref={ref}
-        src="http://localhost:8080/revisit-widget"
+        src={page === "study" ? "http://localhost:8080/revisit-widget" : "http://localhost:8080/analysis/stats/revisit-widget"}
         style={{ width: "100%", height: "400px" }}
       />
     </div>
