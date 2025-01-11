@@ -7,6 +7,8 @@ from enum import Enum
 import csv
 from dataclasses import make_dataclass
 import re
+import os
+import shutil
 from . import widget as _widget
 
 
@@ -569,5 +571,13 @@ def _extract_datum_value(text: str) -> str:
 
 
 def _copy_file(src: str, dest: str ):
-    # Implement
-    pass
+    # Check if file exists
+    if not os.path.exists(src):
+        raise FileNotFoundError(f'File "{src}" not found.')
+
+    # Delete file if it exists
+    if os.path.exists(dest):
+        os.remove(dest)
+
+    print(f'Copying file from {src} to {dest}')
+    shutil.copyfile(src, dest)
