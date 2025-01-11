@@ -370,7 +370,6 @@ def data(file_path: str) -> List[Any]:
 
 
 def widget(study: _WrappedStudyConfig, revisitPath: str):
-    print(revisitPath)
     extracted_paths = []
     for component in study.root.components.values():
         if hasattr(component.root, 'path'):
@@ -400,6 +399,8 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
     # w = _widget.Widget()
     # w.config = json.loads(study.__str__())
     # return w
+
+
 
 
 # ------- PRIVATE FUNCTIONS ------------ #
@@ -565,3 +566,8 @@ def _extract_datum_value(text: str) -> str:
     if match:
         return match.group(1)  # Return the captured part (i.e., 'thing')
     return None  # Return None if the pattern doesn't match
+
+
+def _copy_file(src: str, dest: str ):
+    # Implement
+    pass
