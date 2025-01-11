@@ -372,7 +372,11 @@ def data(file_path: str) -> List[Any]:
 
 
 def widget(study: _WrappedStudyConfig, revisitPath: str):
+    if not os.path.isdir(revisitPath):
+        raise RevisitError(message=f'"{revisitPath}" does not exist.')
+
     extracted_paths = []
+
     for component in study.root.components.values():
         if hasattr(component.root, 'path'):
 
@@ -423,12 +427,9 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
     for item in extracted_paths:
         _copy_file(item['src'], item['dest'])
 
-    print(extracted_paths)
-    print(study)
-
-    # w = _widget.Widget()
-    # w.config = json.loads(study.__str__())
-    # return w
+    w = _widget.Widget()
+    w.config = json.loads(study.__str__())
+    return w
 
 
 # ------- PRIVATE FUNCTIONS ------------ #
@@ -596,14 +597,12 @@ def _extract_datum_value(text: str) -> str:
     return None  # Return None if the pattern doesn't match
 
 
-def _copy_file(src: str, dest: str ):
+def _copy_file(src: str, dest: str):
     # Check if file exists
     if not os.path.exists(src):
-        raise FileNotFoundError(f'File "{src}" not found.')
+        raise RevisitError(message=f'File "{src}" not found.')
 
-    # Delete file if it exists
-    if os.path.exists(dest):
-        os.remove(dest)
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
 
     print(f'Copying file from {src} to {dest}')
     shutil.copyfile(src, dest)
