@@ -1,9 +1,13 @@
-import revisit as rvt
-import data.scatterjnd.metadata as metadata
+import src.revisit as rvt
 
 
 study_metadata = rvt.studyMetadata(
-    **metadata.study_metadata
+    title='Test Title',
+    date="",
+    organizations=[],
+    authors=[],
+    version='1.0',
+    description=""
 )
 
 newResponse = rvt.response(
@@ -37,8 +41,14 @@ comp_two = rvt.component(
 ])
 
 
-ui_config = rvt.uiConfig(**metadata.ui_config)
-study_data = rvt.data('data/scatterjnd/data.csv')
+ui_config = rvt.uiConfig(
+    sidebar=True,
+    contactEmail='',
+    withProgressBar=True,
+    logoPath='',
+    helpTextPath=''
+)
+
 
 introduction = rvt.component(
     component_name__='introduction',
@@ -99,7 +109,9 @@ base_component = rvt.component(
     )
 ])
 
-sequence = rvt.sequence(order='fixed').from_data(study_data).component(
+study_data = rvt.data('data/data.csv')
+
+sequence = rvt.sequence(order='random').from_data('study_data').component(
     base__=base_component,
     component_name__='datum:id',
     parameters={
@@ -111,14 +123,20 @@ sequence = rvt.sequence(order='fixed').from_data(study_data).component(
 
 other_sequence = rvt.sequence(
     order='fixed',
-    components=[comp_one, comp_two]
+    components=[
+        introduction,
+        training,
+        practice,
+        begin
+    ]
 )
+
 
 study = rvt.studyConfig(
     schema='test',
     uiConfig=ui_config,
     studyMetadata=study_metadata,
-    sequence=sequence,
+    sequence=other_sequence + sequence,
     components=[rvt.component(component_name__='my-test-thing', type='questionnaire', response=[])]
 )
 

@@ -120,13 +120,24 @@ class _WrappedComponentBlock(_JSONableBaseModel):
 
     def __add__(self, other):
         """Allows addition operator to append to sequence components list."""
-        if isinstance(other, _WrappedComponentBlock) or isinstance(other, _WrappedComponent):
+        if isinstance(other, _WrappedComponent):
             self.component_objects__.append(other)
             self.root.components.append(other.component_name__)
             return self
+        elif isinstance(other, _WrappedComponentBlock):
+            # Extend existing list of components with new set of components for tracking
+            self.component_objects__.extend(other.component_objects__)
+
+            # Add root object to components
+            self.root.components.append(other.root)
+            return self
         return NotImplemented
 
-    def from_data(self, data_list: list):
+    def from_data(self, data_list) -> DataIterator:
+        if not isinstance(data_list, list):
+            raise RevisitError(
+                message="'from_data' must take in a list of data rows. Use reVISit's 'data' method to parse a CSV file into a valid input."
+            )
         return DataIterator(data_list, self)
 
 
