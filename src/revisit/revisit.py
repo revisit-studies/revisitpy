@@ -88,7 +88,6 @@ class _WrappedComponent(_JSONableBaseModel):
         return None
 
     def edit_response(self, id: str, **kwargs) -> _WrappedComponent:
-        print(self.root.response)
         for r in self.root.response:
             if r.root.id == id:
                 # Get dict 
@@ -529,22 +528,30 @@ def _generate_possible_component_types():
 # Generates mappings between the response class name and the
 # type string literal. Creates the reversed mapping as well.
 def _generate_possible_types(orig_cls):
-    response_type_hint = get_type_hints(orig_cls).get('root')
-    response_types = get_args(response_type_hint)
+    type_hints = get_type_hints(orig_cls).get('root')
+    types = get_args(type_hints)
     type_hints = {}
     type_hints_reversed = {}
-    for cls in response_types:
-        curr_type = get_type_hints(cls).get('type')
-        curr_origin = get_origin(get_type_hints(cls).get('type'))
-        if curr_origin is Literal:
-            type_hints[cls.__name__] = set([get_args(curr_type)[0]])
-            type_hints_reversed[get_args(curr_type)[0]] = cls.__name__
-        elif isinstance(curr_type, type) and issubclass(curr_type, Enum):
-            enum_list = [member.value for member in curr_type]
-            type_hints[cls.__name__] = set(enum_list)
-            for item in enum_list:
-                type_hints_reversed[item] = cls.__name__
-
+    for cls in types:
+        # If class is the union of two separate classes,
+        # need to get types from root
+        if get_type_hints(cls).get('root') is not None:
+            test = get_type_hints(cls).get('root')
+            for item in get_args(test):
+                curr_type = get_type_hints(item).get('type')
+                type_hints[cls.__name__] = set([get_args(curr_type)[0]])
+                type_hints_reversed[get_args(curr_type)[0]] = cls.__name__
+        else:
+            curr_type = get_type_hints(cls).get('type')
+            curr_origin = get_origin(get_type_hints(cls).get('type'))
+            if curr_origin is Literal:
+                type_hints[cls.__name__] = set([get_args(curr_type)[0]])
+                type_hints_reversed[get_args(curr_type)[0]] = cls.__name__
+            elif isinstance(curr_type, type) and issubclass(curr_type, Enum):
+                enum_list = [member.value for member in curr_type]
+                type_hints[cls.__name__] = set(enum_list)
+                for item in enum_list:
+                    type_hints_reversed[item] = cls.__name__
     return (type_hints, type_hints_reversed)
 
 
@@ -596,6 +603,11 @@ def _get_filtered_kwargs(class_type: Any, kwargs):
 
     valid_fields = set()
     for model in possible_items:
+        if 'root' in model.model_fields.keys():
+            unioned_classes = (get_args(get_type_hints(model).get('root')))
+            for cls in unioned_classes:
+                valid_fields.update(cls.model_fields.keys())
+                
         valid_fields.update(model.model_fields.keys())
 
     return {key: value for key, value in kwargs.items() if key in valid_fields}

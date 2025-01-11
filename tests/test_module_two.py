@@ -1,4 +1,6 @@
 import src.revisit as rvt
+import altair as alt
+
 
 
 study_metadata = rvt.studyMetadata(
@@ -128,7 +130,8 @@ other_sequence = rvt.sequence(
         introduction,
         training,
         practice,
-        begin
+        begin,
+        rvt.component(type='vega', path='', component_name__='Test me')
     ]
 )
 
@@ -137,17 +140,16 @@ study = rvt.studyConfig(
     schema='test',
     uiConfig=ui_config,
     studyMetadata=study_metadata,
-    sequence=other_sequence + sequence,
+    sequence=other_sequence,
     components=[rvt.component(component_name__='my-test-thing', type='questionnaire', response=[])]
 )
-
+print(study)
 
 
 nextResponse = newResponse.clone()
 nextResponse.set(required=True)
 # print(newResponse)
-# print(nextResponse)
 
 comp_seven = comp_one.clone(component_name__='comp_seven').edit_response(id='hello', questionOptions=['TestFour'])
-print(comp_seven)
-print(comp_one)
+# print(comp_seven)
+# print(comp_one)
