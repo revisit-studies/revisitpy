@@ -394,44 +394,44 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
             fileName = component.root.path.split('/')[-1]
 
             if component.root.type == 'react-component':
-                dest = f"{revisitPath}/src/public/revisit-widget/assets/{fileName}"
+                dest = f"{revisitPath}/src/public/__revisit-widget/assets/{fileName}"
             else:
-                dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+                dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
 
             extracted_paths.append({
                 "src": component.root.path,
                 "dest": dest
             })
 
-            newPath = f"revisit-widget/assets/{fileName}"
+            newPath = f"__revisit-widget/assets/{fileName}"
             component.root.path = newPath
 
     uiConfig = study.root.uiConfig
     if uiConfig.helpTextPath is not None:
 
         fileName = uiConfig.helpTextPath.split('/')[-1]
-        dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+        dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
 
         extracted_paths.append({
             "src": uiConfig.helpTextPath,
             "dest": dest
         })
 
-        newPath = f"revisit-widget/assets/{fileName}"
+        newPath = f"__revisit-widget/assets/{fileName}"
         uiConfig.helpTextPath = newPath
 
     if uiConfig.logoPath is not None:
 
         fileName = uiConfig.logoPath.split('/')[-1]
 
-        dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+        dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
 
         extracted_paths.append({
             "src": uiConfig.logoPath,
             "dest": dest
         })
 
-        newPath = f"revisit-widget/assets/{fileName}"
+        newPath = f"__revisit-widget/assets/{fileName}"
         uiConfig.logoPath = newPath
 
     # Copy all files
