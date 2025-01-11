@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "revisit"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
     "anywidget",
     "ipykernel>=6.29.5",
