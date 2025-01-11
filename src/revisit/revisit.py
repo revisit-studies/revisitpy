@@ -7,6 +7,8 @@ from enum import Enum
 import csv
 from dataclasses import make_dataclass
 import re
+from . import widget as _widget
+
 
 __all__ = [
     "component",
@@ -15,7 +17,8 @@ __all__ = [
     "uiConfig",
     "studyMetadata",
     "studyConfig",
-    "data"
+    "data",
+    "widget"
 ]
 
 
@@ -364,6 +367,39 @@ def data(file_path: str) -> List[Any]:
             data_rows.append(data_row)
 
     return data_rows
+
+
+def widget(study: _WrappedStudyConfig, revisitPath: str):
+    print(revisitPath)
+    extracted_paths = []
+    for component in study.root.components.values():
+        if hasattr(component.root, 'path'):
+            extracted_paths.append({
+                "type": component.root.type,
+                "path": component.root.path
+            })
+
+    uiConfig = study.root.uiConfig
+    if uiConfig.helpTextPath is not None:
+        extracted_paths.append({
+            "type": "help",
+            "path": uiConfig.helpTextPath
+        })
+    if uiConfig.logoPath is not None:
+        extracted_paths.append({
+            "type": "logo",
+            "path": uiConfig.logoPath
+        })
+
+    for item in extracted_paths:
+        if item['type'] == 'react-component':
+            print('is react!')
+        else:
+            print('is not react!')
+
+    # w = _widget.Widget()
+    # w.config = json.loads(study.__str__())
+    # return w
 
 
 # ------- PRIVATE FUNCTIONS ------------ #

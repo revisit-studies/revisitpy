@@ -1,4 +1,4 @@
-import revisit as rvt
+import src.revisit as rvt
 
 if __name__ == "__main__":
     newResponse = rvt.response(
@@ -14,7 +14,8 @@ if __name__ == "__main__":
     newResponse.set(id='test5')
 
     base_comp = rvt.component(
-        type='questionnaire',
+        type='markdown',
+        path='./assets/test-path',
         response=[],
         component_name__='Base_Test'
     )
@@ -33,20 +34,14 @@ if __name__ == "__main__":
         newResponse
     ])
 
-    # Works
-    print(comp_one.get_response('test5'))
-    # Works
-    # print(comp_one.edit_response('test5', required=True))
-    # Works -- throws error when trying to change type
-    # print(comp_one.edit_response('test5', type='shortText'))
-    # Works -- throws error because options is not in matrixResponse
-    # print(comp_one.edit_response('test5', questionOptions='fdfd'))
-    # Works -- none items are overwritten
-    print(comp_one.response_context(all={'location': 'aboveStimulus'}))
-    comps = [comp_one, comp_two]
-    print(comp_one)
-    print(comp_two)
-    print(comp_two.component_name__)
+    comp_three = rvt.component(
+        component_name__='TestThree',
+        response=[],
+        type='react-component',
+        path='../assets/fake-path'
+    )
+
+    comps = [comp_one, comp_two, comp_three]
 
     metadata = rvt.studyMetadata(
         authors=[],
@@ -77,4 +72,5 @@ if __name__ == "__main__":
         components=comps,
         test='hello'
     )
-    print(studyConfig)
+
+    rvt.widget(studyConfig, '/Users/bbollen23/study')

@@ -47,3 +47,7 @@ class Widget(anywidget.AnyWidget):
         self.internalWidget.value += 1
         # internalWidget.value += 1
         # print("{name} changed from {old} to {new}".format(**change))
+
+    # def set(self, study: rvt._WrappedStudyConfig):
+    #     self.config = json.loads(study.__str__())
+    #     return self
