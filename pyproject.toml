@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "revisit_notebook_widget"
-version = "0.0.2"
+name = "revisit"
+version = "0.0.6"
 dependencies = [
     "anywidget",
     "ipykernel>=6.29.5",
@@ -26,12 +26,12 @@ dev = ["watchfiles", "jupyterlab"]
 
 [tool.hatch.build]
 only-packages = true
-artifacts = ["src/revisit_notebook_widget/static/*"]
+artifacts = ["src/revisit/static/*"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["src/revisit_notebook_widget/static/widget.js"]
-skip-if-exists = ["src/revisit_notebook_widget/static/widget.js"]
+ensured-targets = ["src/revisit/static/widget.js"]
+skip-if-exists = ["src/revisit/static/widget.js"]
 dependencies = ["hatch-jupyter-builder>=0.5.0"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]

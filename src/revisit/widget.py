@@ -1,7 +1,7 @@
 import importlib.metadata
 import pathlib
-import anywidget
-import traitlets
+import anywidget  # type: ignore
+import traitlets  # type: ignore
 
 try:
     __version__ = importlib.metadata.version("revisit_notebook_widget")
@@ -9,9 +9,7 @@ except importlib.metadata.PackageNotFoundError:
     __version__ = "unknown"
 
 
-
 # class Widget2(anywidget.AnyWidget):
-    
 class TestWidget(anywidget.AnyWidget):
     _esm = """
     function render({ model, el }) {
@@ -36,7 +34,6 @@ class TestWidget(anywidget.AnyWidget):
     value = traitlets.Int(0).tag(sync=True)
 
 
-
 class Widget(anywidget.AnyWidget):
     _esm = pathlib.Path(__file__).parent / "static" / "widget.js"
     _css = pathlib.Path(__file__).parent / "static" / "widget.css"
@@ -50,5 +47,3 @@ class Widget(anywidget.AnyWidget):
         self.internalWidget.value += 1
         # internalWidget.value += 1
         # print("{name} changed from {old} to {new}".format(**change))
-
-    

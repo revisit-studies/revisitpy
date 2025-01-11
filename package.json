@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"dev": "yarn run build -- --sourcemap=inline --watch",
-		"build": "esbuild js/widget.tsx --minify --format=esm --bundle --outdir=src/revisit_notebook_widget/static",
+		"build": "esbuild js/widget.tsx --minify --format=esm --bundle --outdir=src/revisit/static",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

@@ -1,0 +1,2148 @@
+{
+    "studyMetadata": {
+        "title": "Upset Alttext User Survey",
+        "version": "pilot",
+        "authors": [
+            "The reVISit Team"
+        ],
+        "date": "2024-03-19",
+        "description": "A sample questionnaire study",
+        "organizations": [
+            "University of Utah"
+        ]
+    },
+    "uiConfig": {
+        "contactEmail": "test@test.com",
+        "helpTextPath": "Upset-Alttext-User-Survey/assets/upset.md",
+        "logoPath": "revisitAssets/revisitLogoSquare.svg",
+        "urlParticipantIdParam": "PROLIFIC_PID",
+        "studyEndMsg": "**Thank you for participating. You may click this link and return to Prolific**:[https://app.prolific.com/submissions/complete?cc=CVRK3FRJ](https://app.prolific.com/submissions/complete?cc=CVRK3FRJ)",
+        "withProgressBar": true,
+        "autoDownloadStudy": false,
+        "sidebar": true,
+        "enumerateQuestions": true,
+        "sidebarWidth": 440
+    },
+    "sequence": {
+        "order": "fixed",
+        "components": [
+            "introduction",
+            {
+                "order": "latinSquare",
+                "components": [
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-Vis-question-1",
+                                    "covid-Vis-question-2",
+                                    "covid-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-TextAndVis-question-1",
+                                    "tennis-TextAndVis-question-2",
+                                    "tennis-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-Text-question-1",
+                                    "organization-Text-question-2",
+                                    "organization-Text-question-3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-Vis-question-1",
+                                    "tennis-Vis-question-2",
+                                    "tennis-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-TextAndVis-question-1",
+                                    "covid-TextAndVis-question-2",
+                                    "covid-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-Text-question-1",
+                                    "organization-Text-question-2",
+                                    "organization-Text-question-3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-Vis-question-1",
+                                    "organization-Vis-question-2",
+                                    "organization-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-TextAndVis-question-1",
+                                    "covid-TextAndVis-question-2",
+                                    "covid-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-Text-question-1",
+                                    "tennis-Text-question-2",
+                                    "tennis-Text-question-3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-Vis-question-1",
+                                    "tennis-Vis-question-2",
+                                    "tennis-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-TextAndVis-question-1",
+                                    "organization-TextAndVis-question-2",
+                                    "organization-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-Text-question-1",
+                                    "covid-Text-question-2",
+                                    "covid-Text-question-3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-Vis-question-1",
+                                    "covid-Vis-question-2",
+                                    "covid-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-TextAndVis-question-1",
+                                    "organization-TextAndVis-question-2",
+                                    "organization-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-Text-question-1",
+                                    "tennis-Text-question-2",
+                                    "tennis-Text-question-3"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "organization-Vis-question-1",
+                                    "organization-Vis-question-2",
+                                    "organization-Vis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "tennis-TextAndVis-question-1",
+                                    "tennis-TextAndVis-question-2",
+                                    "tennis-TextAndVis-question-3"
+                                ]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": [
+                                    "covid-Text-question-1",
+                                    "covid-Text-question-2",
+                                    "covid-Text-question-3"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "components": {
+        "introduction": {
+            "type": "Markdown"
+        },
+        "covid-Vis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "6"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Fatigue"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Anosmia,Fatigue"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "281"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of 2-3 sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidVis.md"
+        },
+        "covid-Vis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidVis.md"
+        },
+        "covid-Vis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from this plot for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidVis.md"
+        },
+        "tennis-TextAndVis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "4"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Australian"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "French Open"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "23"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is only of a single set"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Roughly equal"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "No"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are there?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisTextAndVis.md"
+        },
+        "tennis-TextAndVis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisTextAndVis.md"
+        },
+        "tennis-TextAndVis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the plot and the description for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisTextAndVis.md"
+        },
+        "organization-Text-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "8"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "UPU"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Interpol,UN,UNESCO,UPU,WHO"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "117"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of many sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "No"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the description?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationText.md"
+        },
+        "organization-Text-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationText.md"
+        },
+        "organization-Text-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the description of this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationText.md"
+        },
+        "tennis-Vis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "4"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Australian"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "French Open"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "23"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is only of a single set"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Roughly equal"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "No"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisVis.md"
+        },
+        "tennis-Vis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisVis.md"
+        },
+        "tennis-Vis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from this plot for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisVis.md"
+        },
+        "covid-TextAndVis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "6"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Fatigue"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Anosmia,Fatigue"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "281"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of 2-3 sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are there?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidTextAndVis.md"
+        },
+        "covid-TextAndVis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidTextAndVis.md"
+        },
+        "covid-TextAndVis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the plot and the description for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidTextAndVis.md"
+        },
+        "organization-Vis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "8"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "UPU"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Interpol,UN,UNESCO,UPU,WHO"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "117"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of many sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "No"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationVis.md"
+        },
+        "organization-Vis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationVis.md"
+        },
+        "organization-Vis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from this plot for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationVis.md"
+        },
+        "tennis-Text-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "4"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Australian"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "French Open"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "23"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is only of a single set"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Roughly equal"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "No"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the description?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Australian",
+                        "French Open",
+                        "US Open",
+                        "Wimbledon",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisText.md"
+        },
+        "tennis-Text-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisText.md"
+        },
+        "tennis-Text-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the description of this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/tennisText.md"
+        },
+        "organization-TextAndVis-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "8"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "UPU"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Interpol,UN,UNESCO,UPU,WHO"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "117"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of many sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "No"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are there?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "CICA",
+                        "G-5",
+                        "Interpol",
+                        "SAARC",
+                        "SICA",
+                        "UN",
+                        "UNESCO",
+                        "UPU",
+                        "WHO",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationTextAndVis.md"
+        },
+        "organization-TextAndVis-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationTextAndVis.md"
+        },
+        "organization-TextAndVis-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text and Visual",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the plot and the description for this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/organizationTextAndVis.md"
+        },
+        "covid-Text-question-1": {
+            "nextButtonLocation": "sidebar",
+            "correctAnswer": [
+                {
+                    "id": "voq1",
+                    "answer": "6"
+                },
+                {
+                    "id": "voq2",
+                    "answer": "Fatigue"
+                },
+                {
+                    "id": "voq3",
+                    "answer": "Anosmia,Fatigue"
+                },
+                {
+                    "id": "voq4",
+                    "answer": "281"
+                },
+                {
+                    "id": "voq5",
+                    "answer": "It is the intersection of 2-3 sets"
+                },
+                {
+                    "id": "voq6",
+                    "answer": "Diverging a lot"
+                },
+                {
+                    "id": "voq7",
+                    "answer": "Yes"
+                },
+                {
+                    "id": "voq8",
+                    "answer": "Yes"
+                }
+            ],
+            "description": "Content: Visualization Only",
+            "instruction": "Please answer the following question about the plot:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How many sets are shown in the upset plot?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How many sets are shown in the description?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath"
+                    ],
+                    "placeholder": "Please select an answer"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "What is the largest intersection?",
+                    "secondaryText": "Select all Sets in the Intersection",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "checkbox",
+                    "options": [
+                        "Anosmia",
+                        "Cough",
+                        "Diarrhea",
+                        "Fatigue",
+                        "Fever",
+                        "Shortness of Breath",
+                        "Empty Intersection (no sets)"
+                    ]
+                },
+                {
+                    "id": "voq4",
+                    "prompt": "How large is the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "numerical",
+                    "placeholder": "Please enter your answer here",
+                    "min": 0,
+                    "max": 1000000000
+                },
+                {
+                    "id": "voq5",
+                    "prompt": "How many sets make up the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        "It is only of a single set",
+                        "It is the intersection of 2-3 sets",
+                        "It is the intersection of many sets",
+                        "It is the empty intersection (no sets)"
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq6",
+                    "prompt": "How similar are the set sizes?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "dropdown",
+                    "options": [
+                        {
+                            "label": "Roughly equal (all the set sizes look similar)",
+                            "value": "Roughly equal"
+                        },
+                        {
+                            "label": "Diverging a bit (the sizes of the largest set and the smallest set don't differ largely)",
+                            "value": "Diverging a bit"
+                        },
+                        {
+                            "label": "Diverging a lot (the sizes of the largest set and the smallest set differ largely)",
+                            "value": "Diverging a lot"
+                        }
+                    ],
+                    "placeholder": "Please choose your answer"
+                },
+                {
+                    "id": "voq7",
+                    "prompt": "Is the largest set present in the largest intersection?",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "id": "voq8",
+                    "prompt": "Is the all-set intersection (intersection having all the sets) present? ",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "radio",
+                    "options": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidText.md"
+        },
+        "covid-Text-question-2": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Rate the content:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "How confident are you in your answers?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Very"
+                },
+                {
+                    "id": "voq2",
+                    "prompt": "How well did you understand the information presented?",
+                    "secondaryText": "1 = Not at all understood, 5 = Completely understood",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Completely"
+                },
+                {
+                    "id": "voq3",
+                    "prompt": "How effective was the plot at conveying information?",
+                    "secondaryText": "1 = Not at all effective, 5 = Extremely effective",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "numItems": 5,
+                    "leftLabel": "Not",
+                    "rightLabel": "Extremely"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidText.md"
+        },
+        "covid-Text-question-3": {
+            "nextButtonLocation": "sidebar",
+            "description": "Content: Text Only",
+            "instruction": "Please answer the following question about the chart:",
+            "response": [
+                {
+                    "id": "voq1",
+                    "prompt": "What are your insights and take-aways from the description of this data?",
+                    "secondaryText": "1 = Not at all confident, 5 = Very confident",
+                    "required": true,
+                    "location": "sidebar",
+                    "type": "likert",
+                    "rightLabel": "Very"
+                }
+            ],
+            "type": "markdown",
+            "path": "Upset-Alttext-User-Survey/assets/covidText.md"
+        }
+    }
+}
