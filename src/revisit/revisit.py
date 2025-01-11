@@ -375,34 +375,60 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
     extracted_paths = []
     for component in study.root.components.values():
         if hasattr(component.root, 'path'):
+
+            fileName = component.root.path.split('/')[-1]
+
+            if component.root.type == 'react-component':
+                dest = f"{revisitPath}/src/public/revisit-widget/assets/{fileName}"
+            else:
+                dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+
             extracted_paths.append({
-                "type": component.root.type,
-                "path": component.root.path
+                "src": component.root.path,
+                "dest": dest
             })
+
+            newPath = f"revisit-widget/assets/{fileName}"
+            component.root.path = newPath
 
     uiConfig = study.root.uiConfig
     if uiConfig.helpTextPath is not None:
+
+        fileName = uiConfig.helpTextPath.split('/')[-1]
+        dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+
         extracted_paths.append({
-            "type": "help",
-            "path": uiConfig.helpTextPath
-        })
-    if uiConfig.logoPath is not None:
-        extracted_paths.append({
-            "type": "logo",
-            "path": uiConfig.logoPath
+            "src": uiConfig.helpTextPath,
+            "dest": dest
         })
 
+        newPath = f"revisit-widget/assets/{fileName}"
+        uiConfig.helpTextPath = newPath
+
+    if uiConfig.logoPath is not None:
+
+        fileName = uiConfig.logoPath.split('/')[-1]
+
+        dest = f"{revisitPath}/public/revisit-widget/assets/{fileName}"
+
+        extracted_paths.append({
+            "src": uiConfig.logoPath,
+            "dest": dest
+        })
+
+        newPath = f"revisit-widget/assets/{fileName}"
+        uiConfig.logoPath = newPath
+
+    # Copy all files
     for item in extracted_paths:
-        if item['type'] == 'react-component':
-            print('is react!')
-        else:
-            print('is not react!')
+        _copy_file(item['src'], item['dest'])
+
+    print(extracted_paths)
+    print(study)
 
     # w = _widget.Widget()
     # w.config = json.loads(study.__str__())
     # return w
-
-
 
 
 # ------- PRIVATE FUNCTIONS ------------ #
