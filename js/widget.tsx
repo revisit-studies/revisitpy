@@ -134,7 +134,7 @@ const render = createRender(() => {
       </div>
       <iframe
         ref={ref}
-        src={page === "study" ? "http://localhost:8080/revisit-widget" : "http://localhost:8080/analysis/stats/revisit-widget"}
+        src={page === "study" ? "http://localhost:8080/__revisit-widget" : "http://localhost:8080/analysis/stats/__revisit-widget"}
         style={{ width: "100%", height: "400px" }}
       />
     </div>
