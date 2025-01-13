@@ -89,6 +89,8 @@ const render = createRender(() => {
   const [iframeReady, setIframeReady] = React.useState(0);
   const [page, setPage] = React.useState("study");
   const [sequences, setSequence] = useModelState<any>("sequence");
+  const [participantsDataJSON, setParticipantsDataJSON] = useModelState<any>("participants_data_json");
+  const [participantsDataTIDY, setParticipantsDataTIDY] = useModelState<any>("participants_data_tidy");
 
   const ref = React.useRef<HTMLIFrameElement>(null);
 
@@ -108,6 +110,10 @@ const render = createRender(() => {
     const messageListener = (event: MessageEvent) => {
       if (event.data.type === "revisitWidget/READY") {
         setIframeReady(i => i + 1);
+      } else if (event.data.type === "revisitWidget/PYTHON_EXPORT_JSON") {
+        setParticipantsDataJSON(event.data.payload);
+      } else if (event.data.type === "revisitWidget/PYTHON_EXPORT_TIDY") {
+        setParticipantsDataTIDY(event.data.payload);
       } else if (event.data.type === "revisitWidget/SEQUENCE_ARRAY") {
         setSequence(event.data.payload);
       }
