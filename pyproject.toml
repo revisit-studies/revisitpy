@@ -4,8 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "revisit"
-version = "0.0.11"
+version = "0.0.12"
 dependencies = [
+    "altair[all]>=5.5.0",
     "anywidget",
     "ipykernel>=6.29.5",
     "pandas>=2.2.3",

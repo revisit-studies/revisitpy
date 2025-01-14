@@ -1,155 +1,76 @@
-import src.revisit as rvt
-import altair as alt
+import src.revisit.revisit as rvt
 
-
+comp = rvt.component(
+    component_name__='test-comp',
+    type='website',
+    path='fake-path'
+)
 
 study_metadata = rvt.studyMetadata(
-    title='Test Title',
-    date="",
-    organizations=[],
-    authors=[],
-    version='1.0',
-    description=""
+    authors=["Brian Bollen"],
+    organizations=["Visualization Design La"],
+    title='Showcasing revisit-py',
+    description='',
+    date='2025-01-13',
+    version='1.0'
 )
-
-newResponse = rvt.response(
-    id='hello',
-    type='matrix-radio',
-    required=False,
-    prompt='Test Prompt',
-    test='hello',
-    answerOptions='satisfaction5',
-    questionOptions=['Test1', 'Test2']
-)
-
-
-base_comp = rvt.component(
-    type='questionnaire',
-    response=[],
-    component_name__='Base_Test'
-)
-
-comp_one = rvt.component(
-    base__=base_comp,
-    component_name__='Test',
-).responses([
-    newResponse
-])
-
-comp_two = rvt.component(
-    base__=base_comp,
-    component_name__='TestTwo',
-).responses([
-    newResponse
-])
-
 
 ui_config = rvt.uiConfig(
-    sidebar=True,
-    contactEmail='',
-    withProgressBar=True,
-    logoPath='',
-    helpTextPath=''
+  contactEmail="briancbollen@gmail.com",
+  logoPath="./assets/revisitLogoSquare.svg",
+  sidebar=True,
+  withProgressBar=False
 )
 
+sequence = rvt.sequence(order='fixed', components=[comp])
 
-introduction = rvt.component(
-    component_name__='introduction',
-    type='markdown',
-    path="ScatterJND-study/assets/introduction.md",
-    response=[
-        rvt.response(**{
-            "id": "prolificId",
-            "prompt": "Please enter your Prolific ID",
-            "required": True,
-            "location": "belowStimulus",
-            "type": "shortText",
-            "placeholder": "Prolific ID",
-            "paramCapture": "PROLIFIC_PID"
-        })
-    ]
-)
 
-training = rvt.component(
-    component_name__='training',
-    type='markdown',
-    path="ScatterJND-study/assets/training.md",
-    response=[]
-)
+# sequence.permute(
+#         factors=['comp:A', 'comp:B', 'comp:C'],
+#         order='fixed',
+#         numSamples='1'
+#     )
 
-practice_response = rvt.response(
-    id="completed",
-    prompt="Did you complete the practice?",
-    type="iframe",
-    hidden=True,
-    required=True
-)
-practice = rvt.component(
-    component_name__='practice',
-    type='react-component',
-    path="emma-jnd/vistaJND/src/components/vis/PracticeScatter.tsx",
-).responses([
-    practice_response
-])
+# sequence.permute(
+#         factors=['comp:A', 'comp:B', 'comp:C'],
+#         order='fixed',
+#     ).permute(
+#         factors=['data:1', 'data:2'],
+#         order='random'
+#     )
 
-begin = rvt.component(
-    component_name__='begin',
-    type='markdown',
-    path="ParallelJND-study/assets/begin.md"
-)
-
-base_component = rvt.component(
-    component_name__='base-component-1',
-    type='react-component',
-    path='emma-jnd/vistaJND/src/components/vis/JNDScatterRevised.tsx'
-).responses([
-    rvt.response(
-        id='scatterSelections',
-        prompt='Select an option',
-        type='iframe',
-        hidden=True,
-        required=True
+sequence.permute(
+        factors=['comp:A', 'comp:B', 'comp:C'],
+        order='fixed',
+    ).permute(
+        factors=['data:1', 'data:2'],
+        order='fixed',
+        numSamples=1
+    ).permute(
+        factors=['task:easy', 'task:med', 'task:hard'],
+        order='random'
     )
-])
+    
+# sequence.permute(
+#         factors=['comp:A', 'comp:B', 'comp:C'],
+#         order='fixed',
+#         numSamples='1'
+#     ).permute(
+#         factors=['data:1', 'data:2'],
+#         order='fixed'
+#     ).permute(
+#         factors=['task:easy', 'task:med', 'task:hard'],
+#         order='random'
+#     ).permute(
+#         factors=['lastly:X', 'lastly:Y'],
+#         order='random'
+#     )
 
-study_data = rvt.data('data/data.csv')
-
-sequence = rvt.sequence(order='random').from_data(study_data).component(
-    base__=base_component,
-    component_name__='datum:id',
-    parameters={
-        'r1': 'datum:r1',
-        'r2': 'datum:r2',
-        'above': 'datum:position'
-    }
-)
-
-other_sequence = rvt.sequence(
-    order='fixed',
-    components=[
-        introduction,
-        training,
-        practice,
-        begin,
-        rvt.component(type='vega', path='', component_name__='Test me')
-    ]
-)
-
-
+# print(sequence)
 study = rvt.studyConfig(
-    schema='test',
+    schema='fake-schema',
     uiConfig=ui_config,
     studyMetadata=study_metadata,
-    sequence=other_sequence,
-    components=[rvt.component(component_name__='my-test-thing', type='questionnaire', response=[])]
+    sequence=sequence
 )
 print(study)
-
-
-nextResponse = newResponse.clone()
-nextResponse.set(required=True)
-# print(newResponse)
-
-comp_seven = comp_one.clone(component_name__='comp_seven').edit_response(id='hello', questionOptions=['TestFour'])
-# print(comp_seven)
-# print(comp_one)

@@ -59,7 +59,7 @@ class _WrappedResponse(_JSONableBaseModel):
         return self
 
     def clone(self):
-        return response(**self.root.__dict__)
+        return __response__(**self.root.__dict__)
 
 
 # Private
@@ -77,7 +77,7 @@ class _WrappedComponent(_JSONableBaseModel):
     def responses(self, responses: List[_WrappedResponse]) -> _WrappedComponent:
         for item in responses:
             if not isinstance(item, _WrappedResponse):
-                raise ValueError(f'Expecting type Response got {type(item)}')
+                raise RevisitError(message=f'Expecting type Response but got {type(item)}')
         self.root.response = responses
         return self
 
@@ -93,7 +93,7 @@ class _WrappedComponent(_JSONableBaseModel):
                 # Get dict 
                 response_dict = r.root.__dict__
                 # Create new response
-                new_response = response(**response_dict)
+                new_response = __response__(**response_dict)
                 # Set with new values
                 new_response.set(**kwargs)
                 # Filter out old response
@@ -119,7 +119,7 @@ class _WrappedComponent(_JSONableBaseModel):
         return self
 
     def clone(self, component_name__):
-        return component(**self.root.__dict__, component_name__=component_name__)
+        return __component__(**self.root.__dict__, component_name__=component_name__)
 
 
 class _WrappedStudyMetadata(_JSONableBaseModel):
@@ -155,6 +155,26 @@ class _WrappedComponentBlock(_JSONableBaseModel):
                 message="'from_data' must take in a list of data rows. Use reVISit's 'data' method to parse a CSV file into a valid input."
             )
         return DataIterator(data_list, self)
+
+    def get_component(self, name: str) -> _WrappedComponent:
+        for entry in self.component_objects__:
+            print(f'Comp Name: {entry.component_name__}')
+            print(f'Name: {name}')
+            if entry.component_name__ == name:
+                return entry
+
+    def permute(self, factors: List[str], order: rvt_models.Order, numSamples: Optional[int] = None,) -> None:
+        # Convert to JSON
+        self_json = json.loads(self.__str__())
+        # Get all current component dictionaries
+        components_dict = {c.component_name__: c for c in self.component_objects__}
+        # Recursively start permutation function
+        new_permuted_component_block = _recursive_json_permutation(self_json, factors=factors, order=order, numSamples=numSamples, input_components=components_dict)
+        # Set new objects
+        self.component_objects__ = new_permuted_component_block.component_objects__
+        # Set new root
+        self.root = new_permuted_component_block.root
+        return self
 
 
 class _WrappedStudyConfig(_JSONableBaseModel):
@@ -198,7 +218,7 @@ class DataIterator:
                             current_dict[key] = value
                     else:
                         current_dict[key] = value
-            curr_component = component(**current_dict)
+            curr_component = __component__(**current_dict)
             self.parent_class = self.parent_class + curr_component
         # Return the parent class calling iterator when component is finished.
         return self.parent_class
@@ -276,6 +296,10 @@ def component(**kwargs) -> _WrappedComponent:
         raise RevisitError(e.errors())
 
 
+# Shadowing
+__component__ = component
+
+
 # Response factory function
 @overload
 def response(**kwargs: Unpack[rvt_models.NumericalResponseType]) -> _WrappedResponse: ...
@@ -310,6 +334,10 @@ def response(**kwargs) -> _WrappedResponse:
         return _WrappedResponse(**kwargs, root=base_model)
     except ValidationError as e:
         raise RevisitError(e.errors())
+
+
+# Shadowing
+__response__ = response
 
 
 def studyMetadata(**kwargs: Unpack[rvt_models.StudyMetadataType]):
@@ -348,6 +376,10 @@ def sequence(**kwargs: Unpack[rvt_models.ComponentBlockType]):
     filter_kwargs['components'] = valid_component_names
     base_model = rvt_models.ComponentBlock(**filter_kwargs)
     return _WrappedComponentBlock(**kwargs, root=base_model, component_objects__=valid_components)
+
+
+# Shadowing
+__sequence__ = sequence
 
 
 @overload
@@ -646,3 +678,56 @@ def _copy_file(src: str, dest: str):
 
     print(f'Copying file from {src} to {dest}')
     shutil.copyfile(src, dest)
+
+
+def _recursive_json_permutation(
+    input_json: dict,
+    factors: List[str],
+    order: rvt_models.Order,
+    numSamples: int,
+    input_components: dict
+):
+    new_seq = __sequence__(order=order, numSamples=numSamples)
+    while input_json['components']:
+        c = input_json['components'].pop()
+        # If component name
+        if isinstance(c, str):
+            # Get orig component
+            curr_comp = input_components[c]
+            # Create new comp block for permuting this component across all factors
+            curr_seq = __sequence__(order=order, numSamples=numSamples)
+            # Generate new comp for each
+            for entry in factors:
+                # Split factor entry
+                [name, value] = entry.split(":")
+                # Assign params
+                new_params = {name: value}
+                if curr_comp.root.parameters is not None:
+                    new_params = {**curr_comp.root.parameters, **new_params}
+                # Create new component
+                curr_comp = __component__(
+                    base__=curr_comp,
+                    component_name__=f"{c}__{entry}",
+                    parameters=new_params
+                )
+                # Add to curr seq block
+                curr_seq = curr_seq + curr_comp
+            # Add seq block to outer seq block
+        else:
+            new_input_json = c
+            temp_num_samples = None
+            if new_input_json.get('numSamples') is not None:
+                temp_num_samples = new_input_json['numSamples']
+
+            curr_seq = _recursive_json_permutation(
+                input_json=new_input_json,
+                order=order,
+                numSamples=numSamples,
+                input_components=input_components,
+                factors=factors
+            )
+            curr_seq.root.order = new_input_json['order']
+            curr_seq.root.numSamples = temp_num_samples
+        new_seq = new_seq + curr_seq
+    return new_seq
+        
