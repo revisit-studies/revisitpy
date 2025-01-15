@@ -7,7 +7,6 @@ name = "revisit"
 version = "0.0.18"
 dependencies = [
     "anywidget",
-    "ipykernel>=6.29.5",
     "pydantic>=2.10.5",
 ]
 readme = "README.md"
