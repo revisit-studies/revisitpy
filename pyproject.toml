@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "revisit"
-version = "0.0.16"
+version = "0.0.17"
 dependencies = [
     "altair[all]>=5.5.0",
     "anywidget",
