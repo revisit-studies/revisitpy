@@ -67,6 +67,7 @@ class _WrappedComponent(_JSONableBaseModel):
     component_name__: str
     base__: Optional[_WrappedComponent] = None
     context__: Optional[dict] = None
+    metadata__: Optional[dict] = None
     root: rvt_models.IndividualComponent
 
     def model_post_init(self, __context: Any) -> None:
@@ -158,18 +159,40 @@ class _WrappedComponentBlock(_JSONableBaseModel):
 
     def get_component(self, name: str) -> _WrappedComponent:
         for entry in self.component_objects__:
-            print(f'Comp Name: {entry.component_name__}')
-            print(f'Name: {name}')
             if entry.component_name__ == name:
                 return entry
 
-    def permute(self, factors: List[str], order: rvt_models.Order, numSamples: Optional[int] = None,) -> None:
+    def permute(
+        self,
+        factors: List[str],
+        order: rvt_models.Order,
+        numSamples: Optional[int] = None,
+        component_function=None
+    ) -> None:
+
+        # Initialize components list with blank component if empty
+        make_comp_block = True
+        if len(self.component_objects__) == 0:
+            self = self + __component__(type='questionnaire', component_name__='place-holder-component')
+        # If there only exists one component (either existing one or placeholder),
+        # do not create the first component blocks.
+        if len(self.component_objects__)  == 1:
+            make_comp_block = False
+
         # Convert to JSON
         self_json = json.loads(self.__str__())
         # Get all current component dictionaries
         components_dict = {c.component_name__: c for c in self.component_objects__}
         # Recursively start permutation function
-        new_permuted_component_block = _recursive_json_permutation(self_json, factors=factors, order=order, numSamples=numSamples, input_components=components_dict)
+        new_permuted_component_block = _recursive_json_permutation(
+            self_json,
+            factors=factors,
+            order=order,
+            numSamples=numSamples,
+            input_components=components_dict,
+            component_function=component_function,
+            make_comp_block=make_comp_block
+        )
         # Set new objects
         self.component_objects__ = new_permuted_component_block.component_objects__
         # Set new root
@@ -437,22 +460,25 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
     extracted_paths = []
 
     for component in study.root.components.values():
-        if hasattr(component.root, 'path'):
+        actual_component = component.root
+        if hasattr(actual_component, 'root'):
+            actual_component = actual_component.root
+        if hasattr(actual_component, 'path'):
 
-            fileName = component.root.path.split('/')[-1]
+            fileName = actual_component.path.split('/')[-1]
 
-            if component.root.type == 'react-component':
+            if actual_component.type == 'react-component':
                 dest = f"{revisitPath}/src/public/__revisit-widget/assets/{fileName}"
             else:
                 dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
 
             extracted_paths.append({
-                "src": component.root.path,
+                "src": actual_component.path,
                 "dest": dest
             })
 
             newPath = f"__revisit-widget/assets/{fileName}"
-            component.root.path = newPath
+            actual_component.path = newPath
 
     uiConfig = study.root.uiConfig
     if uiConfig.helpTextPath is not None:
@@ -684,10 +710,12 @@ def _recursive_json_permutation(
     input_json: dict,
     factors: List[str],
     order: rvt_models.Order,
-    numSamples: int,
-    input_components: dict
+    input_components: dict,
+    numSamples: Optional[int] = None,
+    component_function=None,
+    make_comp_block=True
 ):
-    new_seq = __sequence__(order=order, numSamples=numSamples)
+    new_seq = __sequence__(order=input_json['order'], numSamples=input_json.get('numSamples'))
     while input_json['components']:
         c = input_json['components'].pop()
         # If component name
@@ -698,20 +726,22 @@ def _recursive_json_permutation(
             curr_seq = __sequence__(order=order, numSamples=numSamples)
             # Generate new comp for each
             for entry in factors:
-                # Split factor entry
-                [name, value] = entry.split(":")
                 # Assign params
-                new_params = {name: value}
-                if curr_comp.root.parameters is not None:
-                    new_params = {**curr_comp.root.parameters, **new_params}
+                metadata = entry
+                if curr_comp.metadata__ is not None:
+                    metadata = {**curr_comp.metadata__, **entry}
                 # Create new component
-                curr_comp = __component__(
-                    base__=curr_comp,
-                    component_name__=f"{c}__{entry}",
-                    parameters=new_params
-                )
+                comp_name = ":".join(f"{key}:{value}" for key, value in entry.items())
+                if component_function:
+                    new_comp = component_function(**metadata)
+                else:
+                    new_comp = __component__(
+                        base__=curr_comp,
+                        component_name__=f"{c}__{comp_name}",
+                        metadata__=metadata
+                    )
                 # Add to curr seq block
-                curr_seq = curr_seq + curr_comp
+                curr_seq = curr_seq + new_comp
             # Add seq block to outer seq block
         else:
             new_input_json = c
@@ -724,10 +754,15 @@ def _recursive_json_permutation(
                 order=order,
                 numSamples=numSamples,
                 input_components=input_components,
-                factors=factors
+                factors=factors,
+                component_function=component_function
             )
             curr_seq.root.order = new_input_json['order']
             curr_seq.root.numSamples = temp_num_samples
         new_seq = new_seq + curr_seq
-    return new_seq
-        
+
+    # Only return curr sequence if not making the comp block.
+    if make_comp_block is True:
+        return new_seq
+    else:
+        return curr_seq
