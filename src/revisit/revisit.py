@@ -176,7 +176,7 @@ class _WrappedComponentBlock(_JSONableBaseModel):
             self = self + __component__(type='questionnaire', component_name__='place-holder-component')
         # If there only exists one component (either existing one or placeholder),
         # do not create the first component blocks.
-        if len(self.component_objects__)  == 1:
+        if len(self.component_objects__) == 1:
             make_comp_block = False
 
         # Convert to JSON

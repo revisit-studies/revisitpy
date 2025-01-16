@@ -4,10 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "revisit"
-version = "0.0.18"
+version = "0.0.24"
 dependencies = [
     "anywidget",
     "pydantic>=2.10.5",
+    "pandas"
 ]
 readme = "README.md"
 
@@ -26,6 +27,8 @@ dev = ["watchfiles", "jupyterlab"]
 [tool.hatch.build]
 only-packages = true
 artifacts = ["src/revisit/static/*"]
+exclude = ["tests", "scripts"]
+
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
