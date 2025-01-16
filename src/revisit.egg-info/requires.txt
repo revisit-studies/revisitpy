@@ -1,7 +1,0 @@
-anywidget
-pydantic>=2.10.5
-pandas
-
-[dev]
-watchfiles
-jupyterlab
