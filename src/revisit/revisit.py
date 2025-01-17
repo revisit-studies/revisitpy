@@ -53,7 +53,6 @@ class _WrappedResponse(_JSONableBaseModel):
             elif key != 'base':
                 if overwrite is True or (overwrite is False and getattr(self.root, key) is None):
                     setattr(self.root, key, value)
-
         # Re-validates the model. Returns the new model.
         self.root = _validate_response(self.root.__dict__)
         return self
@@ -168,7 +167,7 @@ class _WrappedComponentBlock(_JSONableBaseModel):
         order: rvt_models.Order,
         numSamples: Optional[int] = None,
         component_function=None
-    ) -> None:
+    ) -> _WrappedComponentBlock:
 
         # Initialize components list with blank component if empty
         make_comp_block = True
@@ -453,9 +452,39 @@ def data(file_path: str) -> List[Any]:
     return data_rows
 
 
-def widget(study: _WrappedStudyConfig, revisitPath: str):
-    if not os.path.isdir(revisitPath):
-        raise RevisitError(message=f'"{revisitPath}" does not exist.')
+def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, pathToLib=''):
+
+    # If server is set to true, needs to use the correct package path.
+    # If server is not true, needs to have a valid revisitPath. I think we already handle that below
+
+    if server is False and not os.path.isdir(revisitPath):
+        raise RevisitError(message=f'"{revisitPath}" does not exist. Specify a correct revisitPath or use the revisti_server module and set "server" to "True".')
+
+    # Set defaults for when not using server.
+    dest_loc = f"{revisitPath}/public/__revisit-widget/assets/"
+    dest_loc_react = f"{revisitPath}/src/public/__revisit-widget/assets/"
+    
+    # If using server,
+    if server is True:
+        # If not path specified, search in current environment.
+        if pathToLib == '':
+            # Get working directory
+            current_dir = os.getcwd()
+            # Get parent directory (list of packages installed in .venv)
+            parent_dir = os.path.dirname(current_dir)
+
+            # Construct the path to the revisit_server package
+            revisit_server_dir = os.path.join(parent_dir, 'revisit_server')
+            if not os.path.isdir(revisit_server_dir):
+                raise RevisitError(message='Cannot locate "revisit_server" package in current environment. Specify directory using "pathToLib" or install "revisit_server" in same environment as "revisit" package.')
+
+            dest_loc = f"{revisit_server_dir}/static/__revisit-widget/assets/"
+        else:
+            if not os.path.isdir(pathToLib):
+                raise RevisitError(message=f'"{pathToLib}" is not a directory.')
+            dest_loc = f"{pathToLib}/static/__revisit-widget/assets/"
+            if not os.path.isdir(dest_loc):
+                raise RevisitError(message=f'"{dest_loc}" is not a directory.')
 
     extracted_paths = []
 
@@ -468,11 +497,12 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
             fileName = actual_component.path.split('/')[-1]
 
             if actual_component.type == 'react-component':
-                dest = f"{revisitPath}/src/public/__revisit-widget/assets/{fileName}"
+                dest = f"{dest_loc_react}{fileName}"
             else:
-                dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
+                dest = f"{dest_loc}{fileName}"
 
             extracted_paths.append({
+                "type": actual_component.type,
                 "src": actual_component.path,
                 "dest": dest
             })
@@ -484,9 +514,10 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
     if uiConfig.helpTextPath is not None:
 
         fileName = uiConfig.helpTextPath.split('/')[-1]
-        dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
+        dest = f"{dest_loc}{fileName}"
 
         extracted_paths.append({
+            "type": 'helpTextPath',
             "src": uiConfig.helpTextPath,
             "dest": dest
         })
@@ -498,9 +529,10 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
 
         fileName = uiConfig.logoPath.split('/')[-1]
 
-        dest = f"{revisitPath}/public/__revisit-widget/assets/{fileName}"
+        dest = f"{dest_loc}{fileName}"
 
         extracted_paths.append({
+            "type": 'logoPath',
             "src": uiConfig.logoPath,
             "dest": dest
         })
@@ -510,7 +542,10 @@ def widget(study: _WrappedStudyConfig, revisitPath: str):
 
     # Copy all files
     for item in extracted_paths:
-        _copy_file(item['src'], item['dest'])
+        if item['type'] == 'react-component' and server is True:
+            print('Skipping react component when "server" is set to "True".')
+        else:
+            _copy_file(item['src'], item['dest'])
 
     w = _widget.Widget()
     w.config = json.loads(study.__str__())
@@ -731,7 +766,7 @@ def _recursive_json_permutation(
                 if curr_comp.metadata__ is not None:
                     metadata = {**curr_comp.metadata__, **entry}
                 # Create new component
-                comp_name = ":".join(f"{key}:{value}" for key, value in entry.items())
+                comp_name = "_".join(f"{key}:{value}" for key, value in entry.items())
                 if component_function:
                     new_comp = component_function(**metadata)
                 else:

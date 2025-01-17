@@ -22,3 +22,16 @@ if __name__ == "__main__":
     )
 
     print(comp_one)
+
+    response_one = rvt.response(
+        id='r-1',
+        type='shortText',
+        required=False,
+        location='belowStimulus',
+        prompt=''
+    )
+
+    response_one.set(prompt='New Prompt')
+    print(response_one)
+
+    response_one.set(options=['Option 1', 'Option 2', 'Option 3'])

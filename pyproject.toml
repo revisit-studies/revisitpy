@@ -4,11 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "revisit"
-version = "0.0.24"
+version = "0.0.28"
 dependencies = [
     "anywidget",
     "pydantic>=2.10.5",
-    "pandas"
+    "pandas",
+    "revisit-server>=0.0.1",
 ]
 readme = "README.md"
 
