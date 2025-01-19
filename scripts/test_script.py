@@ -13,7 +13,7 @@ Run this file using the module syntax:
 uv run -m scripts.test_script
 '''
 
-import src.revisit.revisit as rvt
+import revisitpy.revisitpy as rvt
 
 if __name__ == "__main__":
     comp_one = rvt.component(

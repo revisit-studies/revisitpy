@@ -463,13 +463,19 @@ def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, path
     # Set defaults for when not using server.
     dest_loc = f"{revisitPath}/public/__revisit-widget/assets/"
     dest_loc_react = f"{revisitPath}/src/public/__revisit-widget/assets/"
-    
+
     # If using server,
     if server is True:
         # If not path specified, search in current environment.
         if pathToLib == '':
             # Get working directory
-            current_dir = os.getcwd()
+
+            # Get the absolute path of the current file
+            current_file_path = os.path.abspath(__file__)
+
+            # Get the directory containing the current file
+            current_dir = os.path.dirname(current_file_path)
+
             # Get parent directory (list of packages installed in .venv)
             parent_dir = os.path.dirname(current_dir)
 

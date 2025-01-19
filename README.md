@@ -92,7 +92,61 @@ my_response = rvt.response(
 
 ## `studyMetadata(**kwargs: dict) -> StudyMetadata`
 
+Instantiates a StudyMetadata class with the given parameters.
+
+### **Parameters**:
+| Parameter | Type   | Description                     | Default Value |
+|-----------|--------|---------------------------------|---------------|
+| `**kwargs` | `dict` | Required properties for the StudyMetadata | _None_ |
+
+### **Returns**:
+- `Response`: Returns an instantiation of the Response class.
+
+### **Raises**:
+- `RevisitError`: If the required properties are not specified, and exception will be raised.
+
+### **Example**:
+```python
+import revisit as rvt
+
+# Initializing a matrix radio response
+my_response = rvt.response(
+    type='matrix-radio',
+    answerOptions='likely5',
+    questionOptions=['Question 1', 'Question 2', 'Question 3'],
+    required=True,
+    location='sidebar'
+)
+```
+
 ## `uiConfig(**kwargs: dict) -> UIConfig`
+
+Instantiates a UIConfig class with the given parameters.
+
+### **Parameters**:
+| Parameter | Type   | Description                     | Default Value |
+|-----------|--------|---------------------------------|---------------|
+| `**kwargs` | `dict` | The component function requires any property that the component already requires, such as "type". Refer to the configuration documentation for required properties. | _None_ |
+
+### **Returns**:
+- `Response`: Returns an instantiation of the Response class.
+
+### **Raises**:
+- `RevisitError`: If the required properties are not specified, and exception will be raised.
+
+### **Example**:
+```python
+import revisit as rvt
+
+# Initializing a matrix radio response
+my_response = rvt.response(
+    type='matrix-radio',
+    answerOptions='likely5',
+    questionOptions=['Question 1', 'Question 2', 'Question 3'],
+    required=True,
+    location='sidebar'
+)
+```
 
 ### `studyConfig(studyMetadata: StudyMetadata, uiConfig: UIConfig, sequence: ComponentBlock, schema: str, components: Optional[List[Component]]) -> StudyConfig`
 
@@ -105,7 +159,7 @@ Instantiates a the final `StudyConfig` based on the `UIConfig`, `StudyMetadata`,
 | `uiConfig` | `UIConfig` | An instance of the `UIConfig` class | _None_ |
 | `sequence` | `ComponentBlock` | The top level member of your sequence. | _None_ |
 | `components` | `Optional[List[Component]]` | The list of `Component`s to be added to the config. This is automatically populated based on the inputted sequence | `[]` |
-| `schema` | `str` |The valid `$schema` value for the config | _None_ |
+| `schema` | `str` |The valid `$schema` value for the config. You can always find the most recent schema value in the public repository of our main study repository, such as [here](https://github.com/revisit-studies/study/blob/main/public/demo-html/config.json) | _None_ |
 
 ### **Returns**:
 - `StudyConfig`: Returns an instantiation of the StudyConfig class.
@@ -116,7 +170,18 @@ Instantiates a the final `StudyConfig` based on the `UIConfig`, `StudyMetadata`,
 ### **Example**:
 
 ```python
+ui_config = rvt.uiConfig(...)
+study_metadata = rvt.studyMetadata(...)
+comp_one = rvt.component(...)
+comp_two = rvt.component(...)
+sequence = rvt.sequence(order='fixed',components=[comp_one, comp_two])
 
+study = rvt.studyConfig(
+    schema='https://raw.githubusercontent.com/revisit-studies/study/v2.0.0-rc5/src/parser/StudyConfigSchema.json',
+    studyMetadata=study_metadata,
+    uiConfig=ui_config,
+    sequence=sequence # <-- Do not need to add components list separately if they are already in the sequence.
+)
 ```
 
 # Classes 

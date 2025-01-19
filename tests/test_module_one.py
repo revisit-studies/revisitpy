@@ -1,4 +1,4 @@
-import src.revisit.revisit as rvt
+import revisitpy.revisitpy as rvt
 import unittest
 import json
 

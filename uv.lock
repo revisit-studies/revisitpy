@@ -1235,13 +1235,12 @@ wheels = [
 
 [[package]]
 name = "revisit"
-version = "0.0.27"
+version = "0.0.29"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
     { name = "pandas" },
     { name = "pydantic" },
-    { name = "revisit-server" },
 ]
 
 [package.optional-dependencies]
@@ -1262,7 +1261,6 @@ requires-dist = [
     { name = "jupyterlab", marker = "extra == 'dev'" },
     { name = "pandas" },
     { name = "pydantic", specifier = ">=2.10.5" },
-    { name = "revisit-server", specifier = ">=0.0.1" },
     { name = "watchfiles", marker = "extra == 'dev'" },
 ]
 
@@ -1270,15 +1268,6 @@ requires-dist = [
 dev = [
     { name = "jupyterlab" },
     { name = "watchfiles" },
-]
-
-[[package]]
-name = "revisit-server"
-version = "0.0.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/95/c1/0671da4f8a1eebfa4b9fae10c5e51ec6a58ffa24fe85bc403789f42e3ced/revisit_server-0.0.1.tar.gz", hash = "sha256:fbd50867ac2c2eec989bb80e527c8d443a9caa115d20201c448dd3081283d8a1", size = 830 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/ab/efea237ca6d4dc52384ef503379870cab1d072445de2741b95135b696c4b/revisit_server-0.0.1-py2.py3-none-any.whl", hash = "sha256:2167f9814edf2d2c8f478c29399fbc3d524c8493a336bd48606cf817787ddbf9", size = 1547 },
 ]
 
 [[package]]
