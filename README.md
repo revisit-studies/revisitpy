@@ -18,11 +18,13 @@ The reVISit python package wraps the standard items of the reVISit configuration
 
 Each factory function takes in the same parameters as the reVISit configuration file. For example, the `studyMetadata` function requires the author, organizations, title, version, and description parameters. Robust error output will help you, the user, understand what is required in each function. For the sake of brevity, we do not list every possible parameter since these are already defined in the current study configuration. Instead, we will show additional required/optional parameters as well as additional methods and other exposed functions.
 
-The individual classes (`Component`, `Response`, `Sequence`, `StudyMetadata`, `UIConfig`, and `StudyConfig`) should not be created directly. Instead, you should use the corresponding factory functions to insantiate them (`component()`, `response()`, `sequence()`, `studyMetadata()`, `uiConfig()`, and `studyConfig`).
+The individual classes (`Component`, `Response`, `Sequence`, `StudyMetadata`, `UIConfig`, and `StudyConfig`) should not be created directly. Instead, you should use the corresponding factory functions to insantiate them (`component()`, `response()`, `sequence()`, `studyMetadata()`, `uiConfig()`, and `studyConfig()`).
 
 # Functions
 
-## `component(component_name__: str, base__: Optional[component], **kwargs: dict) -> Component`
+# Functions
+
+### `component(component_name__, base__, **kwargs) -> Component`
 
 Instantiates a Component class with the given input parameters.
 
@@ -60,7 +62,7 @@ my_other_component = rvt.component(
 ```
 
 
-## `response(**kwargs: dict) -> Response`
+### `response(**kwargs) -> Response`
 
 
 Instantiates a Response class with the given input parameters.
@@ -90,7 +92,7 @@ my_response = rvt.response(
 )
 ```
 
-## `studyMetadata(**kwargs: dict) -> StudyMetadata`
+### `studyMetadata(**kwargs) -> StudyMetadata`
 
 Instantiates a StudyMetadata class with the given parameters.
 
@@ -119,7 +121,7 @@ my_response = rvt.response(
 )
 ```
 
-## `uiConfig(**kwargs: dict) -> UIConfig`
+### `uiConfig(**kwargs) -> UIConfig`
 
 Instantiates a UIConfig class with the given parameters.
 
@@ -148,7 +150,7 @@ my_response = rvt.response(
 )
 ```
 
-### `studyConfig(studyMetadata: StudyMetadata, uiConfig: UIConfig, sequence: ComponentBlock, schema: str, components: Optional[List[Component]]) -> StudyConfig`
+### `studyConfig(studyMetadata, uiConfig, sequence, schema, components) -> StudyConfig`
 
 Instantiates a the final `StudyConfig` based on the `UIConfig`, `StudyMetadata`, `Sequence`, and `Components` input. Note that the components list is completely optional: using the `studyConfig` factory function automatically populates all components based on their presence in the sequence.
 

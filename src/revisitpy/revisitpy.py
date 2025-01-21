@@ -5,11 +5,12 @@ from pydantic import BaseModel, ValidationError  # type: ignore
 from typing import List, Literal, get_origin, Optional, get_args, Any, Unpack, overload, get_type_hints
 from enum import Enum
 import csv
-from dataclasses import make_dataclass
+from dataclasses import make_dataclass, asdict
 import re
 import os
 import shutil
 from . import widget as _widget
+import inspect
 
 
 __all__ = [
@@ -43,6 +44,15 @@ class _WrappedResponse(_JSONableBaseModel):
         # Sets the root to be the instantiation of the individual response type instead
         # of the union response type
         self.root = self.root.root
+
+    def get(self, param):
+        wrapped_keys = self.__annotations__.keys()
+        if param in wrapped_keys:
+            return getattr(self, param)
+        elif param == 'name':
+            return getattr(self.root, 'id')
+        else:
+            return getattr(self.root, param)
 
     def set(self, overwrite=True, **kwargs) -> _WrappedResponse:
         for key, value in kwargs.items():
@@ -81,6 +91,15 @@ class _WrappedComponent(_JSONableBaseModel):
         self.root.response = responses
         return self
 
+    def get(self, param):
+        wrapped_keys = self.__annotations__.keys()
+        if param in wrapped_keys:
+            return getattr(self, param)
+        elif param == 'name':
+            return getattr(self, 'component_name__')
+        else:
+            return getattr(self.root, param)
+
     def get_response(self, id: str) -> _WrappedResponse | None:
         for response in self.root.response:
             if response.root.id == id:
@@ -90,7 +109,7 @@ class _WrappedComponent(_JSONableBaseModel):
     def edit_response(self, id: str, **kwargs) -> _WrappedComponent:
         for r in self.root.response:
             if r.root.id == id:
-                # Get dict 
+                # Get dict
                 response_dict = r.root.__dict__
                 # Create new response
                 new_response = __response__(**response_dict)
@@ -149,12 +168,55 @@ class _WrappedComponentBlock(_JSONableBaseModel):
             return self
         return NotImplemented
 
+    def component(self, component_function) -> _WrappedComponentBlock:
+
+        self_json = json.loads(self.__str__())
+
+        components_dict = {c.component_name__: c for c in self.component_objects__}
+
+        x = _recursive_map(self_json, components_dict, component_function)
+
+        self.component_objects__ = x.component_objects__
+        self.root = x.root
+
+        return self
+
     def from_data(self, data_list) -> DataIterator:
         if not isinstance(data_list, list):
             raise RevisitError(
                 message="'from_data' must take in a list of data rows. Use reVISit's 'data' method to parse a CSV file into a valid input."
             )
-        return DataIterator(data_list, self)
+
+        # for every point in self.data (i.e. each row)
+        # create a new component with the attached metadata
+        new_component_objects = []
+        new_component_names = []
+
+        # If no components exist, make placeholder component
+        if len(self.component_objects__) == 0:
+            self = self + __component__(
+                type='questionnaire', component_name__='place-holder-component'
+            )
+
+        for entry in self.component_objects__:
+            for datum in data_list:
+                curr_dict = asdict(datum)
+                comp_name = f'{entry.component_name__}_{"_".join([f'{key}:{value}' for key, value in curr_dict.items()])}'
+                metadata = curr_dict
+                if entry.metadata__ is not None:
+                    metadata = {**entry.metadata__, **curr_dict}
+
+                new_comp = __component__(
+                    base__=entry,
+                    component_name__=comp_name,
+                    metadata__=metadata
+                )
+                new_component_objects.append(new_comp)
+                new_component_names.append(comp_name)
+
+        self.root.components = new_component_names
+        self.component_objects__ = new_component_objects
+        return self
 
     def get_component(self, name: str) -> _WrappedComponent:
         for entry in self.component_objects__:
@@ -166,7 +228,6 @@ class _WrappedComponentBlock(_JSONableBaseModel):
         factors: List[str],
         order: rvt_models.Order,
         numSamples: Optional[int] = None,
-        component_function=None
     ) -> _WrappedComponentBlock:
 
         # Initialize components list with blank component if empty
@@ -189,7 +250,6 @@ class _WrappedComponentBlock(_JSONableBaseModel):
             order=order,
             numSamples=numSamples,
             input_components=components_dict,
-            component_function=component_function,
             make_comp_block=make_comp_block
         )
         # Set new objects
@@ -458,7 +518,7 @@ def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, path
     # If server is not true, needs to have a valid revisitPath. I think we already handle that below
 
     if server is False and not os.path.isdir(revisitPath):
-        raise RevisitError(message=f'"{revisitPath}" does not exist. Specify a correct revisitPath or use the revisti_server module and set "server" to "True".')
+        raise RevisitError(message=f'"{revisitPath}" does not exist. Specify a correct revisitPath or use the revisitpy_server module and set "server" to "True".')
 
     # Set defaults for when not using server.
     dest_loc = f"{revisitPath}/public/__revisit-widget/assets/"
@@ -479,10 +539,10 @@ def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, path
             # Get parent directory (list of packages installed in .venv)
             parent_dir = os.path.dirname(current_dir)
 
-            # Construct the path to the revisit_server package
-            revisit_server_dir = os.path.join(parent_dir, 'revisit_server')
+            # Construct the path to the revisitpy_server package
+            revisit_server_dir = os.path.join(parent_dir, 'revisitpy_server')
             if not os.path.isdir(revisit_server_dir):
-                raise RevisitError(message='Cannot locate "revisit_server" package in current environment. Specify directory using "pathToLib" or install "revisit_server" in same environment as "revisit" package.')
+                raise RevisitError(message='Cannot locate "revisitpy_server" package in current environment. Specify directory using "pathToLib" or install "revisit_server" in same environment as "revisit" package.')
 
             dest_loc = f"{revisit_server_dir}/static/__revisit-widget/assets/"
         else:
@@ -706,7 +766,7 @@ def _get_filtered_kwargs(class_type: Any, kwargs):
             unioned_classes = (get_args(get_type_hints(model).get('root')))
             for cls in unioned_classes:
                 valid_fields.update(cls.model_fields.keys())
-                
+
         valid_fields.update(model.model_fields.keys())
 
     return {key: value for key, value in kwargs.items() if key in valid_fields}
@@ -753,7 +813,6 @@ def _recursive_json_permutation(
     order: rvt_models.Order,
     input_components: dict,
     numSamples: Optional[int] = None,
-    component_function=None,
     make_comp_block=True
 ):
     new_seq = __sequence__(order=input_json['order'], numSamples=input_json.get('numSamples'))
@@ -773,14 +832,12 @@ def _recursive_json_permutation(
                     metadata = {**curr_comp.metadata__, **entry}
                 # Create new component
                 comp_name = "_".join(f"{key}:{value}" for key, value in entry.items())
-                if component_function:
-                    new_comp = component_function(**metadata)
-                else:
-                    new_comp = __component__(
-                        base__=curr_comp,
-                        component_name__=f"{c}__{comp_name}",
-                        metadata__=metadata
-                    )
+
+                new_comp = __component__(
+                    base__=curr_comp,
+                    component_name__=f"{c}__{comp_name}",
+                    metadata__=metadata
+                )
                 # Add to curr seq block
                 curr_seq = curr_seq + new_comp
             # Add seq block to outer seq block
@@ -795,8 +852,7 @@ def _recursive_json_permutation(
                 order=order,
                 numSamples=numSamples,
                 input_components=input_components,
-                factors=factors,
-                component_function=component_function
+                factors=factors
             )
             curr_seq.root.order = new_input_json['order']
             curr_seq.root.numSamples = temp_num_samples
@@ -807,3 +863,48 @@ def _recursive_json_permutation(
         return new_seq
     else:
         return curr_seq
+
+
+def _func_takes_keyword_or_arbitrary(func, keyword):
+    try:
+        sig = inspect.signature(func)
+        # Check for explicit parameters
+        if keyword in sig.parameters:
+            return True
+
+        # Check if the function accepts arbitrary keyword arguments (**kwargs)
+        for param in sig.parameters.values():
+            if param.kind == inspect.Parameter.VAR_KEYWORD:
+                return True  # Function accepts **kwargs
+        return False
+    except ValueError:
+        raise RevisitError(message=f"{func} is not a callable function.")
+
+
+def _recursive_map(input_json, input_components, component_function):
+    new_seq = __sequence__(order=input_json['order'], numSamples=input_json.get('numSamples'))
+    while input_json['components']:
+        c = input_json['components'].pop()
+
+        if isinstance(c, str):
+            curr_comp = input_components[c]
+            metadata = curr_comp.metadata__
+            # Create new comp block for permuting this component across all factors
+            # curr_seq = __sequence__(order=order, numSamples=numSamples)
+            try:
+                can_take_component_ = _func_takes_keyword_or_arbitrary(component_function, 'component__')
+                if can_take_component_:
+                    # Passes in curr_comp
+                    new_comp = component_function(**metadata, component__=curr_comp)
+                else:
+                    new_comp = component_function(**metadata)
+            except Exception:
+                new_comp = curr_comp
+
+            new_seq = new_seq + new_comp
+        else:
+            new_input_json = c
+            curr_seq = _recursive_map(new_input_json, input_components, component_function)
+            new_seq = new_seq + curr_seq
+
+    return new_seq

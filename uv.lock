@@ -1234,8 +1234,8 @@ wheels = [
 ]
 
 [[package]]
-name = "revisit"
-version = "0.0.29"
+name = "revisitpy"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
