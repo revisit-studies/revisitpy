@@ -7,4 +7,10 @@ dist
 __pycache__
 .ipynb_checkpoints
 
-src/revisit/static
+src/revisitpy/static
+
+# Ignoring all scripts except for single test_script
+scripts/*
+!scripts/test_script.py
+!scripts/test_script.ipynb
+!scripts/
