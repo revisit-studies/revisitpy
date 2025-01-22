@@ -17,6 +17,19 @@ import revisitpy.revisitpy as rvt
 import random
 
 if __name__ == "__main__":
+
+    ui_config = rvt.uiConfig(
+        contactEmail="contact@revisit.dev",
+        helpTextPath="./assets/help.md",
+        logoPath="./assets/revisitLogoSquare.svg",
+        withProgressBar=True,
+        autoDownloadStudy=False,
+        autoDownloadTime=5000,
+        sidebar=False,
+        recordStudyAudio=True
+    )
+    print(ui_config)
+
     study_data = rvt.data('./scripts/data.csv')
 
     def component_function(id, r1, r2, position, component__):

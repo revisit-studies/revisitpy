@@ -826,7 +826,8 @@ in the notebook.
 ## CODE GEN
 
 ```bash
-datamodel-codegen --input src/revisit/StudyConfigSchema.json --output src/revisit/models.py  --custom-template-dir custom_templates --output-model-type pydantic_v2.BaseModel --additional-imports "typing.TypedDict, warnings" --input-file-type jsonschema --special-field-name-prefix we_are_going_to_replace_this && sed -i '' 's/we_are_going_to_replace_this_//g'  src/revisit/models.py
+uv pip install datamodel-code-generator
+uv run datamodel-codegen --input src/revisitpy/StudyConfigSchema.json --output src/revisitpy/models.py  --custom-template-dir custom_templates --output-model-type pydantic_v2.BaseModel --additional-imports "typing.TypedDict, warnings" --input-file-type jsonschema --special-field-name-prefix we_are_going_to_replace_this && sed -i '' 's/we_are_going_to_replace_this_//g'  src/revisitpy/models.py
 ```
 
 ## TESTS
