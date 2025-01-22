@@ -340,22 +340,20 @@ def component(**kwargs) -> _WrappedComponent:
     filter_kwargs = _get_filtered_kwargs(rvt_models.IndividualComponent, kwargs)
     # Grab response list
     response = filter_kwargs.get('response')
-
     # Sets default response list
     valid_response = []
     # If response present
     if response is not None:
         for r in response:
-
             # Prevent dict input
             if isinstance(r, dict):
                 raise RevisitError(message='Cannot pass a dictionary directly into "Response" list.')
 
             response_type_hint = get_type_hints(rvt_models.Response).get('root')
             response_types = get_args(response_type_hint)
-
             # If wrapped, get root
-            if isinstance(r, _WrappedResponse):
+
+            if isinstance(r, _WrappedResponse) or isinstance(r, rvt_models.Response):
                 valid_response.append(r.root)
 
             # If not wrapped but is valid response, append to list
