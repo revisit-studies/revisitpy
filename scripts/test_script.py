@@ -190,6 +190,8 @@ if __name__ == "__main__":
 
     print(comp_one.get('type'))
 
+    print(sequence_three.get_components()[0])
+    # print(sequence_three.get_component("my-component__r1:1__r2:4__position:True"))
     # response_one = rvt.response(
     #     id='r-1',
     #     type='shortText',

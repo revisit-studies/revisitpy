@@ -223,6 +223,9 @@ class _WrappedComponentBlock(_JSONableBaseModel):
             if entry.component_name__ == name:
                 return entry
 
+    def get_components(self) -> _WrappedComponent:
+        return self.component_objects__
+
     def permute(
         self,
         factors: List[str],
