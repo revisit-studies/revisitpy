@@ -788,6 +788,16 @@ Expected Output:
 ```
 ## Development
 
+### Building
+
+You may need to install hatch locally (do not use `uv add hatch` since it will add it to project dependencies and be shipped with build).
+
+```bash
+uv pip install hatch
+uv run hatch build
+uv run hatch publish
+```
+
 We recommend using [uv](https://github.com/astral-sh/uv) for development.
 It will automatically manage virtual environments and dependencies for you.
 
