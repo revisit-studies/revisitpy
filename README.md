@@ -1,15 +1,15 @@
-# revisit
+# ReVISitPy
 
 # Installation
 
 ```sh
-pip install revisit
+pip install revisitpy
 ```
 
 or with [uv](https://github.com/astral-sh/uv):
 
 ```sh
-uv add revisit
+uv add revisitpy
 ```
 
 # Usage
@@ -43,7 +43,7 @@ Instantiates a Component class with the given input parameters.
 
 ### **Example**:
 ```python
-import revisit as rvt
+import revisitpy as rvt
 
 # Initializing a markdown component with an empty response list.
 my_component = rvt.component(
@@ -80,7 +80,7 @@ Instantiates a Response class with the given input parameters.
 
 ### **Example**:
 ```python
-import revisit as rvt
+import revisitpy as rvt
 
 # Initializing a matrix radio response
 my_response = rvt.response(
@@ -109,7 +109,7 @@ Instantiates a StudyMetadata class with the given parameters.
 
 ### **Example**:
 ```python
-import revisit as rvt
+import revisitpy as rvt
 
 # Initializing a matrix radio response
 my_response = rvt.response(
@@ -138,7 +138,7 @@ Instantiates a UIConfig class with the given parameters.
 
 ### **Example**:
 ```python
-import revisit as rvt
+import revisitpy as rvt
 
 # Initializing a matrix radio response
 my_response = rvt.response(
