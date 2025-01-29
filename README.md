@@ -844,5 +844,20 @@ uv run datamodel-codegen --input src/revisitpy/StudyConfigSchema.json --output s
 
 ```bash
 cd revisit-py
-python -m unittest tests.test_module_one
+uv run -m tests.test_module_one
+```
+
+## Publishing
+
+Update version number in pyproject.toml
+
+```bash
+uv run hatch build
+uv run hatch publish
+```
+
+If there hatch is not found, run the following:
+
+```bash
+uv pip install hatch
 ```
