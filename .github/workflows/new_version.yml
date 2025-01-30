@@ -58,7 +58,7 @@ jobs:
 
       - name: Hatch Build
         run: |
-          uv hatch build
+          uv run hatch build
 
       # - name: Hatch Build
       #   run: |
