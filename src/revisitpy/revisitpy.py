@@ -87,7 +87,7 @@ class _WrappedComponent(_JSONableBaseModel):
     def responses(self, responses: List[_WrappedResponse]) -> _WrappedComponent:
         for item in responses:
             if not isinstance(item, _WrappedResponse):
-                raise RevisitError(message=f'Expecting type Response but got {type(item)}')
+                raise RevisitError(message=f"Expecting type Response but got {type(item)}")
         self.root.response = responses
         return self
 
@@ -201,7 +201,8 @@ class _WrappedComponentBlock(_JSONableBaseModel):
         for entry in self.component_objects__:
             for datum in data_list:
                 curr_dict = asdict(datum)
-                comp_name = f'{entry.component_name__}_{"_".join([f'{key}:{value}' for key, value in curr_dict.items()])}'
+                key_string = "_".join([f'{key}:{value}' for key, value in curr_dict.items()])
+                comp_name = f"{entry.component_name__}_{key_string}"
                 metadata = curr_dict
                 if entry.metadata__ is not None:
                     metadata = {**entry.metadata__, **curr_dict}
@@ -626,7 +627,7 @@ def _validate_component(kwargs: dict):
     if 'type' not in kwargs:
         raise RevisitError(message='"Type" is required on Component.')
     elif component_mapping.get(kwargs['type']) is None:
-        raise RevisitError(message=f'Unexpected component type: {kwargs['type']}')
+        raise RevisitError(message=f"Unexpected component type: {kwargs['type']}")
 
     try:
         return rvt_models.IndividualComponent.model_validate(kwargs).root
@@ -723,19 +724,20 @@ class RevisitError(Exception):
         super().__init__('There was an error.')
         if message is None:
             pretty_message_list = pretty_error(errors)
-            self.message = \
-                f'There was an error. \n' \
-                f'----------------------------------------------------' \
-                f'\n\n' \
-                f'{'\n\n'.join(pretty_message_list)}' \
-                f'\n'
+            pretty_message_string = '\n\n'.join(pretty_message_list)
+            self.message = (
+                f"There was an error.\n"
+                f"----------------------------------------------------\n\n"
+                f"{pretty_message_string}\n"
+            )
         else:
-            self.message = \
-                f'There was an error. \n' \
-                f'----------------------------------------------------' \
-                f'\n\n' \
-                f'{message}' \
-                f'\n'
+            self.message = (
+                f"There was an error. \n"
+                f"----------------------------------------------------"
+                f"\n\n"
+                f"{message}"
+                f"\n"
+            )
 
     def __str__(self):
         return self.message
@@ -749,9 +751,9 @@ def pretty_error(errors):
     for error in errors:
         custom_message = custom_messages.get(error['type'])
         if custom_message:
-            new_error_messages.append(f'Location: {error['loc']}\nError: Field "{error['loc'][-1]}" is required.')
+            new_error_messages.append(f"Location: {error['loc']}\nError: Field '{error['loc'][-1]}' is required.")
         else:
-            new_error_messages.append(f'Location: {error['loc']}\nError: {error['msg']}')
+            new_error_messages.append(f"Location: {error['loc']}\nError: {error['msg']}")
     return new_error_messages
 
 
