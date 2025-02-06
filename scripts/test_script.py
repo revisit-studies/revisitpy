@@ -33,7 +33,7 @@ if __name__ == "__main__":
     study_data = rvt.data('./scripts/data.csv')
 
     def component_function(id, r1, r2, position, component__):
-        if component__.type == 'questionnaire':
+        if component__.get('type') == 'questionnaire':
             print('hello')
         return rvt.component(
             type='website',
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     comp_one = rvt.component(
         component_name__='my-component',
         type='questionnaire',
-        metadata__={
+        meta={
             "id": random.randint(1, 10),
             'r1': random.randint(1, 10),
             'r2': random.randint(1, 10),
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     comp_two = rvt.component(
         component_name__='my-component',
         type='questionnaire',
-        metadata__={
+        meta={
             'id': 3
         }
     )
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         order='random'
     )
 
-    # print(sequence_three)
+    print(sequence_three)
     '''
     Output:
 
@@ -200,20 +200,3 @@ if __name__ == "__main__":
         "order": "fixed"
     }
     '''
-
-    print(comp_one.get('type'))
-
-    print(sequence_three.get_components()[0])
-    # print(sequence_three.get_component("my-component__r1:1__r2:4__position:True"))
-    # response_one = rvt.response(
-    #     id='r-1',
-    #     type='shortText',
-    #     required=False,
-    #     location='belowStimulus',
-    #     prompt=''
-    # )
-
-    # response_one.set(prompt='New Prompt')
-    # print(response_one)
-
-    # response_one.set(options=['Option 1', 'Option 2', 'Option 3'])

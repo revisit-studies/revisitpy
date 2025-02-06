@@ -181,7 +181,7 @@ class _WrappedComponentBlock(_JSONableBaseModel):
 
         return self
 
-    def from_data(self, data_list) -> DataIterator:
+    def from_data(self, data_list) -> _WrappedComponentBlock:
         if not isinstance(data_list, list):
             raise RevisitError(
                 message="'from_data' must take in a list of data rows. Use reVISit's 'data' method to parse a CSV file into a valid input."
@@ -204,13 +204,13 @@ class _WrappedComponentBlock(_JSONableBaseModel):
                 key_string = "_".join([f'{key}:{value}' for key, value in curr_dict.items()])
                 comp_name = f"{entry.component_name__}_{key_string}"
                 metadata = curr_dict
-                if entry.metadata__ is not None:
-                    metadata = {**entry.metadata__, **curr_dict}
+                if entry.root.meta is not None:
+                    metadata = {**entry.root.meta, **curr_dict}
 
                 new_comp = __component__(
                     base__=entry,
                     component_name__=comp_name,
-                    metadata__=metadata
+                    meta=metadata
                 )
                 new_component_objects.append(new_comp)
                 new_component_names.append(comp_name)
@@ -269,45 +269,6 @@ class _WrappedStudyConfig(_JSONableBaseModel):
 
 class _StudyConfigType(rvt_models.StudyConfigType):
     components: List[_WrappedComponent]
-
-
-class DataIterator:
-    def __init__(self, data_list: List, parent_class: _WrappedComponentBlock):
-        self.data = data_list
-        self.parent_class = parent_class
-
-    def component(self, **kwargs):
-        for datum in self.data:
-            current_dict = {}
-            for key, value in kwargs.items():
-                if key == 'parameters':
-                    param_dict = {}
-                    for param_key, param_value in value.items():
-                        if type(param_value) is str:
-                            param_datum_value = _extract_datum_value(param_value)
-                            if param_datum_value is not None:
-                                param_dict[param_key] = getattr(datum, param_datum_value)
-                            else:
-                                param_dict[param_key] = value
-                        else:
-                            param_dict[param_key] = value
-                    current_dict[key] = param_dict
-                else:
-                    if type(value) is str:
-                        datum_value = _extract_datum_value(value)
-                        if datum_value is not None:
-                            if key == 'component_name__':
-                                current_dict[key] = str(getattr(datum, datum_value))
-                            else:
-                                current_dict[key] = getattr(datum, datum_value)
-                        else:
-                            current_dict[key] = value
-                    else:
-                        current_dict[key] = value
-            curr_component = __component__(**current_dict)
-            self.parent_class = self.parent_class + curr_component
-        # Return the parent class calling iterator when component is finished.
-        return self.parent_class
 
 
 # # -----------------------------------
@@ -831,15 +792,15 @@ def _recursive_json_permutation(
             for entry in factors:
                 # Assign params
                 metadata = entry
-                if curr_comp.metadata__ is not None:
-                    metadata = {**curr_comp.metadata__, **entry}
+                if curr_comp.root.meta is not None:
+                    metadata = {**curr_comp.root.meta, **entry}
                 # Create new component
                 comp_name = "_".join(f"{key}:{value}" for key, value in entry.items())
 
                 new_comp = __component__(
                     base__=curr_comp,
                     component_name__=f"{c}__{comp_name}",
-                    metadata__=metadata
+                    meta=metadata
                 )
                 # Add to curr seq block
                 curr_seq = curr_seq + new_comp
@@ -891,7 +852,7 @@ def _recursive_map(input_json, input_components, component_function):
 
         if isinstance(c, str):
             curr_comp = input_components[c]
-            metadata = curr_comp.metadata__
+            metadata = curr_comp.root.meta
             # Create new comp block for permuting this component across all factors
             # curr_seq = __sequence__(order=order, numSamples=numSamples)
             try:
