@@ -1,0 +1,81 @@
+name: Create a new version and push to PyPi and GitHub
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  create_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: revisit-studies/study
+          path: study
+
+      - name: Copy new study docs to docs and cleanup
+        run: |
+          cp study/src/parser/StudyConfigSchema.json src/revisitpy/
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+
+      - name: Run CodeGen
+        run: |
+          uv venv
+          uv pip install datamodel-code-generator
+          uv run datamodel-codegen --input src/revisitpy/StudyConfigSchema.json --output src/revisitpy/models.py  --custom-template-dir custom_templates --output-model-type pydantic_v2.BaseModel --additional-imports "typing.TypedDict, warnings" --input-file-type jsonschema --special-field-name-prefix we_are_going_to_replace_this && sed -i -E 's/we_are_going_to_replace_this_//g' src/revisitpy/models.py
+
+      - name: Update pyproject.toml version
+        run: |
+          # Extract the current version
+          MAJOR_VERSION=$(sed -nE 's/^version = "([0-9]+)\.[0-9]+\.[0-9]+"/\1/p' pyproject.toml)
+          MINOR_VERSION=$(sed -nE 's/^version = "[0-9]+\.([0-9]+)\.[0-9]+"/\1/p' pyproject.toml)
+          BUG_FIX_VERSION=$(sed -nE 's/^version = "[0-9]+\.[0-9]+\.([0-9]+)"/\1/p' pyproject.toml)
+
+
+          # Increment the bug fix version
+          NEW_BUG_FIX_VERSION=$((BUG_FIX_VERSION + 1))
+          NEW_VERSION="${MAJOR_VERSION}.${MINOR_VERSION}.${NEW_BUG_FIX_VERSION}"
+
+          # Update the version in pyproject.toml
+          sed -i -E 's/^version = "[0-9]+\.[0-9]+\.[0-9]+"/version = "'"${NEW_VERSION}"'"/' pyproject.toml
+
+          # Print the new version for debugging
+          echo "New version: ${NEW_VERSION}"
+
+      - name: Hatch Install
+        run: |
+          uv pip install hatch
+
+      - name: Hatch Build
+        run: |
+          uv run hatch build
+
+      # - name: Hatch Build
+      #   run: |
+      #     uv hatch publish
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "jackwilburn@tutanota.com"
+          git config --global user.name "Jack Wilburn"
+          git pull
+          git add src
+          git commit -m "Create a new version based on the latest tag"
+          git push
