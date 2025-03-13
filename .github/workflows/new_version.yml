@@ -52,6 +52,15 @@ jobs:
           # Print the new version for debugging
           echo "New version: ${NEW_VERSION}"
 
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "jackwilburn@tutanota.com"
+          git config --global user.name "Jack Wilburn"
+          git pull
+          git add src
+          git commit -m "Create a new version based on the latest tag"
+          git push
+
       - name: Hatch Install
         run: |
           uv pip install hatch
@@ -68,12 +77,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.email "jackwilburn@tutanota.com"
-          git config --global user.name "Jack Wilburn"
-          git pull
-          git add src
-          git commit -m "Create a new version based on the latest tag"
-          git push
