@@ -1,4 +1,4 @@
-name: Create a new version and push to PyPi and GitHub
+name: Create a bugfix new version and push to PyPi and GitHub
 
 on:
   pull_request:

@@ -1,4 +1,4 @@
-name: Create a new version and push to PyPi and GitHub
+name: Create a new minor version and push to PyPi and GitHub
 
 on:
   repository_dispatch:
