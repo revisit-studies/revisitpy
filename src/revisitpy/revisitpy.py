@@ -21,7 +21,8 @@ __all__ = [
     "studyMetadata",
     "studyConfig",
     "data",
-    "widget"
+    "widget",
+    "answer",
 ]
 
 
@@ -72,6 +73,11 @@ class _WrappedResponse(_JSONableBaseModel):
 
 
 # Private
+class _WrappedAnswer(_JSONableBaseModel):
+    root: rvt_models.Answer
+
+
+# Private
 class _WrappedComponent(_JSONableBaseModel):
     component_name__: str
     base__: Optional[_WrappedComponent] = None
@@ -89,6 +95,13 @@ class _WrappedComponent(_JSONableBaseModel):
             if not isinstance(item, _WrappedResponse):
                 raise RevisitError(message=f"Expecting type Response but got {type(item)}")
         self.root.response = responses
+        return self
+
+    def correct_answers(self, answers: List[_WrappedAnswer]) -> _WrappedComponent:
+        for item in answers:
+            if not isinstance(item, _WrappedAnswer):
+                raise RevisitError(message=f"Expecting type Answer but got {type(item)}")
+        self.root.correctAnswer = answers
         return self
 
     def get(self, param):
@@ -131,6 +144,43 @@ class _WrappedComponent(_JSONableBaseModel):
             for response in self.root.response:
                 if response.root.type == type or type == 'all':
                     response.set(
+                        overwrite=False,
+                        **data
+                    )
+
+        return self
+
+    def get_correct_answer(self, id: str) -> _WrappedAnswer | None:
+        for answer in self.root.correctAnswer:
+            if answer.root.id == id:
+                return answer
+        return None
+
+    def edit_correct_answer(self, id: str, **kwargs) -> _WrappedComponent:
+        for a in self.root.correctAnswer:
+            if a.root.id == id:
+                # Get dict
+                answer_dict = a.root.__dict__
+                # Create new answer
+                new_answer = answer(**answer_dict)
+                # Set with new values
+                new_answer.set(**kwargs)
+                # Filter out old answer
+                self.root.correctAnswer = [_a for _a in self.root.correctAnswer if _a.root.id != id]
+                # Add new answer
+                self.root.correctAnswer.append(new_answer)
+                # Return component
+                return self
+
+        raise ValueError('No answer with given ID found.')
+
+    def correct_answer_context(self, **kwargs):
+        self.metadata__ = kwargs
+
+        for type, data in self.metadata__.items():
+            for answer in self.root.correctAnswer:
+                if answer.root.type == type or type == 'all':
+                    answer.set(
                         overwrite=False,
                         **data
                     )
@@ -335,6 +385,32 @@ def component(**kwargs) -> _WrappedComponent:
 
     filter_kwargs['response'] = valid_response
 
+    # Grab correct answer list
+    correct_answer = filter_kwargs.get('correctAnswer')
+    # Sets default correct answer list
+    valid_correct_answer = []
+    # If correct answer present
+    if correct_answer is not None:
+        for a in correct_answer:
+            # Prevent dict input
+            if isinstance(a, dict):
+                raise RevisitError(message='Cannot pass a dictionary directly into "Correct Answer" list.')
+
+            answer_type_hint = get_type_hints(rvt_models.Answer).get('root')
+            answer_types = get_args(answer_type_hint)
+            # If wrapped, get root
+            if isinstance(a, _WrappedAnswer) or isinstance(a, rvt_models.Answer):
+                valid_correct_answer.append(a.root)
+
+            # If not wrapped but is valid response, append to list
+            elif a.__class__ in answer_types:
+                valid_correct_answer.append(a)
+
+            # If other unknown type, raise error
+            else:
+                raise RevisitError(message=f'Invalid type {type(a)} for "Correct Answer" class.')
+    filter_kwargs['correctAnswer'] = valid_correct_answer
+
     # Validate component
     _validate_component(filter_kwargs)
     base_model = rvt_models.IndividualComponent(**filter_kwargs)
@@ -387,6 +463,12 @@ def response(**kwargs) -> _WrappedResponse:
 
 # Shadowing
 __response__ = response
+
+
+def answer(**kwargs: Unpack[rvt_models.AnswerType]):
+    filter_kwargs = _get_filtered_kwargs(rvt_models.Answer, kwargs)
+    base_model = rvt_models.Answer(**filter_kwargs)
+    return _WrappedAnswer(**kwargs, root=base_model)
 
 
 def studyMetadata(**kwargs: Unpack[rvt_models.StudyMetadataType]):
