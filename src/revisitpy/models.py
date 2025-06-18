@@ -3392,9 +3392,6 @@ class ReactComponentType(TypedDict):
     type: Literal['react-component']
 
 
-class VegaComponent(RootModel[Union[VegaComponentPath, VegaComponentConfig]]):
-    root: Union[VegaComponentPath, VegaComponentConfig]
-
 
 # End of class
 
@@ -3411,7 +3408,8 @@ class IndividualComponent(
             ImageComponent,
             WebsiteComponent,
             QuestionnaireComponent,
-            VegaComponent,
+            VegaComponentPath,
+            VegaComponentConfig,
             VideoComponent,
         ]
     ]
@@ -3422,7 +3420,8 @@ class IndividualComponent(
         ImageComponent,
         WebsiteComponent,
         QuestionnaireComponent,
-        VegaComponent,
+        VegaComponentPath,
+        VegaComponentConfig,
         VideoComponent,
     ]
 
@@ -3437,7 +3436,8 @@ class IndividualComponentType(TypedDict):
         ImageComponent,
         WebsiteComponent,
         QuestionnaireComponent,
-        VegaComponent,
+        VegaComponentPath,
+        VegaComponentConfig,
         VideoComponent,
     ]
 
