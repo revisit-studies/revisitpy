@@ -1,8 +1,9 @@
 name: Create a bugfix new version and push to PyPi and GitHub
 
 on:
-  push:
+  pull_request:
     branches: [main]
+    types: [closed]
   workflow_dispatch:
 
 jobs:
@@ -13,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           token: ${{ secrets.PAT }}
 
       - uses: actions/checkout@v4
