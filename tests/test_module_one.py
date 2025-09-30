@@ -17,7 +17,8 @@ class TestComponentsAndResponses(unittest.TestCase):
             {
                 'path': './assets/test-path',
                 'response': [],
-                'type': 'markdown'
+                'type': 'markdown',
+                'correctAnswer': []
             }
         )
 
