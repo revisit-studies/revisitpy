@@ -409,7 +409,8 @@ def component(**kwargs) -> _WrappedComponent:
             # If other unknown type, raise error
             else:
                 raise RevisitError(message=f'Invalid type {type(a)} for "Correct Answer" class.')
-    filter_kwargs['correctAnswer'] = valid_correct_answer
+
+        filter_kwargs['correctAnswer'] = valid_correct_answer
 
     # Validate component
     _validate_component(filter_kwargs)
@@ -499,6 +500,10 @@ def sequence(**kwargs: Unpack[rvt_models.ComponentBlockType]):
             if isinstance(c, _WrappedComponent):
                 valid_component_names.append(c.component_name__)
                 valid_components.append(c)
+
+            # Allow library components as strings
+            elif isinstance(c, str) and c.startswith("$") and c.split(".")[1] in ['se', 'co', 'sequences', 'components']:
+                valid_component_names.append(c)
 
             # If other unknown type, raise error
             else:
