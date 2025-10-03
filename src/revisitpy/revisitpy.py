@@ -399,8 +399,11 @@ def component(**kwargs) -> _WrappedComponent:
             answer_type_hint = get_type_hints(rvt_models.Answer).get('root')
             answer_types = get_args(answer_type_hint)
             # If wrapped, get root
-            if isinstance(a, _WrappedAnswer) or isinstance(a, rvt_models.Answer):
+            if isinstance(a, _WrappedAnswer):
                 valid_correct_answer.append(a.root)
+
+            elif isinstance(a, rvt_models.Answer):
+                valid_correct_answer.append(a)
 
             # If not wrapped but is valid response, append to list
             elif a.__class__ in answer_types:
