@@ -9,6 +9,7 @@ dependencies = [
     "anywidget",
     "pydantic>=2.10.5",
     "pandas",
+    "polars>=1.37.0",
 ]
 readme = "README.md"
 

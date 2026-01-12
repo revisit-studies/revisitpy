@@ -2,7 +2,7 @@ from __future__ import annotations
 import json
 from . import models as rvt_models
 from pydantic import BaseModel, ValidationError  # type: ignore
-from typing import List, Literal, get_origin, Optional, get_args, Any, Unpack, overload, get_type_hints
+from typing import List, Literal, get_origin, Optional, get_args, Any, Unpack, overload, get_type_hints, Union
 from enum import Enum
 import csv
 from dataclasses import make_dataclass, asdict
@@ -11,7 +11,14 @@ import os
 import shutil
 from . import widget as _widget
 import inspect
-
+try:
+    import pandas as pd
+except ImportError: 
+    pd = None 
+try:
+    import polars as pl 
+except ImportError: 
+    pl = None 
 
 __all__ = [
     "component",
@@ -547,8 +554,32 @@ def studyConfig(**kwargs: Unpack[_StudyConfigType]) -> _WrappedStudyConfig:
 
 
 # Function to parse the CSV and dynamically create data classes
-def data(file_path: str) -> List[Any]:
-    # Read the first row to get the headers
+def data(source: Union[str, pd.DataFrame, pl.DataFrame]) -> List[Any]:
+    """
+    Parse data from. various sources into a list of DataRow objects 
+
+    Supports: 
+    - CSV file path (strings)
+    - pandas DataFrames 
+    - Polars DataFrames 
+
+    Args: 
+        source 
+    """
+    if isinstance(source, str):
+        return _data_from_csv(source)
+    elif pd is not None and isinstance(source, pd.DataFrame): 
+        return _data_from_pandas(source)
+    elif pl is not None and isinstance(source, pl.DataFrame): 
+        return _data_from_polars(source)
+    else: 
+        raise RevisitError(
+            message=f"Unsupported data source type: {type(source)}. Use CSV file path (str), pandas DataFrame, or Polars DataFrame"
+        )
+    
+
+def _data_from_csv(file_path: str) -> List[Any]:
+        # Read the first row to get the headers
     with open(file_path, mode='r') as csvfile:
         csv_reader = csv.DictReader(csvfile)
         headers = csv_reader.fieldnames
@@ -568,6 +599,36 @@ def data(file_path: str) -> List[Any]:
 
     return data_rows
 
+def _data_from_pandas(df: pd.DataFrame) -> List[Any]:
+    """Convert pandas DataFrame to list of DataRow objects."""
+    if df.empty:
+        raise RevisitError(message="DataFrame is empty.")
+    
+    headers = df.columns.tolist()
+    DataRow = make_dataclass("DataRow", [(header, Any) for header in headers])
+    data_rows = []
+    
+    for _, row in df.iterrows():
+        data = {col: row[col] for col in headers}
+        data_row = DataRow(**data)
+        data_rows.append(data_row)
+    
+    return data_rows
+
+def _data_from_polars(df: pl.DataFrame) -> List[Any]: 
+    """Convert Polars DataFrame to list of DataRow objects."""
+    if df.height == 0:
+        raise RevisitError(message="DataFrame is empty.")
+    
+    headers = df.columns
+    DataRow = make_dataclass("DataRow", [(header, Any) for header in headers])
+    data_rows = []
+    
+    for row in df.iter_rows(named=True):
+        data_row = DataRow(**row)
+        data_rows.append(data_row)
+    
+    return data_rows
 
 def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, pathToLib=''):
 
