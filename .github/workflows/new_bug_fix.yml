@@ -60,10 +60,14 @@ jobs:
         run: |
           git config --global user.email "jackwilburn@tutanota.com"
           git config --global user.name "Jack Wilburn"
-          git pull
-          git add src
-          git commit -m "Create a new version based on the latest tag"
-          git push
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Create a new version based on the latest tag"
+          else
+            echo "No changes to commit"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
 
       - name: Hatch Install
         run: |
