@@ -2,8 +2,8 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
-    "python_full_version < '4'",
     "python_full_version >= '4'",
+    "python_full_version < '4'",
 ]
 
 [[package]]
@@ -1240,7 +1240,7 @@ wheels = [
 
 [[package]]
 name = "revisitpy"
-version = "2.5.0"
+version = "2.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
