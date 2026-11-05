@@ -30,7 +30,7 @@ class TestComponentsAndResponses(unittest.TestCase):
             rvt.response(
                 id='first-response',
                 type='matrix-checkbox',
-                answerOptions='likely-7',
+                answerOptions='likely7',
                 required=True,
                 prompt='Fake Prompt',
                 questionOptions=[
@@ -45,10 +45,44 @@ class TestComponentsAndResponses(unittest.TestCase):
 
         self.assertEqual(
             json.loads(response_one.__str__()),
-            {'answerOptions': 'likely-7', 'id': 'first-response', 'prompt': 'Fake Prompt', 'questionOptions': ['Question One', 'Question Two', 'Question Three'], 'required': True, 'type': 'matrix-checkbox'}
+            {'answerOptions': 'likely7', 'id': 'first-response', 'prompt': 'Fake Prompt', 'questionOptions': ['Question One', 'Question Two', 'Question Three'], 'required': True, 'type': 'matrix-checkbox'}
         )
 
-    
+    def test_response_get_set_and_clone(self):
+        for response_type in ('matrix-checkbox', 'matrix-radio', 'shortText'):
+            with self.subTest(response_type=response_type):
+                kwargs = dict(
+                    id='response', type=response_type, prompt='Original', required=True
+                )
+                if response_type.startswith('matrix-'):
+                    kwargs.update(answerOptions='likely7', questionOptions=['Question'])
+                response = rvt.response(**kwargs)
+
+                self.assertEqual(response.get('id'), 'response')
+                self.assertEqual(response.get('name'), 'response')
+                self.assertEqual(response.get('type'), response_type)
+                self.assertIs(response.set(prompt='Updated'), response)
+                self.assertEqual(response.get('prompt'), 'Updated')
+                self.assertEqual(response.get('id'), 'response')
+                # Repeated validation must retain the concrete response model.
+                response.set(required=False)
+                self.assertFalse(response.get('required'))
+
+                clone = response.clone()
+                self.assertEqual(json.loads(str(clone)), json.loads(str(response)))
+                self.assertIsNot(clone.root, response.root)
+                clone.set(id='clone', prompt='Clone')
+                self.assertEqual(clone.get('id'), 'clone')
+                self.assertEqual(response.get('id'), 'response')
+                self.assertEqual(response.get('prompt'), 'Updated')
+
+                component = rvt.component(
+                    type='questionnaire', response=[], component_name__='test'
+                ).responses([response, clone])
+                self.assertIs(component.get_response('response'), response)
+                self.assertIs(component.get_response('clone'), clone)
+
+
 class TestConfigGeneration(unittest.TestCase):
     def test_generated_config_matches_json(self):
         # Load the reference config

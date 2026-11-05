@@ -1,0 +1,56 @@
+name: Python compatibility
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.13.7"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Yarn
+        run: npm install --global yarn@1.22.22
+
+      - name: Install locked dependencies
+        run: uv sync --locked --group release
+
+      - name: Test checked-in models
+        run: uv run --no-sync python -m unittest discover -s tests
+
+      - name: Regenerate models
+        run: |
+          uv run --no-sync datamodel-codegen
+
+      - name: Test regenerated models
+        run: uv run --no-sync python -m unittest discover -s tests
+
+      - name: Build wheel and sdist
+        run: uv run --no-sync hatch build
+
+      - name: Test installed wheel
+        run: |
+          uv venv "$RUNNER_TEMP/wheel-venv"
+          uv pip install --python "$RUNNER_TEMP/wheel-venv/bin/python" dist/*.whl
+          "$RUNNER_TEMP/wheel-venv/bin/python" -c "import revisitpy; print(revisitpy.Widget)"
