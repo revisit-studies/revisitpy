@@ -13,4 +13,5 @@ src/revisitpy/static
 scripts/*
 !scripts/test_script.py
 !scripts/test_script.ipynb
+!scripts/set_release_version.py
 !scripts/

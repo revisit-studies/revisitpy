@@ -1,7 +1,7 @@
 from __future__ import annotations
 import json
 from . import models as rvt_models
-from pydantic import BaseModel, ValidationError  # type: ignore
+from pydantic import BaseModel, RootModel, ValidationError  # type: ignore
 from typing import List, Literal, get_origin, Optional, get_args, Any, Unpack, overload, get_type_hints
 from enum import Enum
 import csv
@@ -42,9 +42,8 @@ class _WrappedResponse(_JSONableBaseModel):
     root: rvt_models.Response
 
     def model_post_init(self, __context: Any) -> None:
-        # Sets the root to be the instantiation of the individual response type instead
-        # of the union response type
-        self.root = self.root.root
+        # Nested response unions (such as matrix responses) may add multiple roots.
+        self.root = _unwrap_root_model(self.root)
 
     def get(self, param):
         wrapped_keys = self.__annotations__.keys()
@@ -677,6 +676,12 @@ def widget(study: _WrappedStudyConfig, revisitPath: str = '', server=False, path
 
 # ------- PRIVATE FUNCTIONS ------------ #
 
+def _unwrap_root_model(model: BaseModel) -> BaseModel:
+    while isinstance(model, RootModel):
+        model = model.root
+    return model
+
+
 def _validate_component(kwargs: dict):
     component_mapping = _generate_possible_component_types()[1]
     if 'type' not in kwargs:
@@ -718,7 +723,7 @@ def _validate_response(kwargs: dict):
             raise RevisitError(message=f'Unexpected type: {type_value}')
 
         try:
-            return rvt_models.Response.model_validate(kwargs).root
+            return _unwrap_root_model(rvt_models.Response.model_validate(kwargs))
         except ValidationError as e:
             temp_errors = []
             for entry in e.errors():

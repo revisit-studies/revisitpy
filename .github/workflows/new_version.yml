@@ -1,23 +1,40 @@
-name: Create a new minor version and push to PyPi and GitHub
+name: Create a new version and push to PyPI and GitHub
 
 on:
   repository_dispatch:
     types: [study_repo_publish]
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Exact package version (X.Y.Z); blank increments the minor version"
+        required: false
+        type: string
+      study_ref:
+        description: "Study tag or commit supplying the schema"
+        required: false
+        default: "main"
+        type: string
+
+concurrency:
+  group: revisitpy-publish
+  cancel-in-progress: false
 
 jobs:
   create_version:
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           token: ${{ secrets.PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: revisit-studies/study
+          ref: ${{ inputs.study_ref || 'main' }}
           path: study
 
       - name: Copy new study docs to docs and cleanup
@@ -26,56 +43,77 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.13.7"
 
       - name: "Set up Python"
         uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Yarn
+        run: npm install --global yarn@1.22.22
+
+      - name: Install locked release dependencies
+        run: uv sync --locked --group release
 
       - name: Run CodeGen
         run: |
-          uv venv
-          uv pip install datamodel-code-generator
-          uv run datamodel-codegen --input src/revisitpy/StudyConfigSchema.json --output src/revisitpy/models.py  --custom-template-dir custom_templates --output-model-type pydantic_v2.BaseModel --additional-imports "typing.TypedDict, warnings" --input-file-type jsonschema --special-field-name-prefix we_are_going_to_replace_this && sed -i -E 's/we_are_going_to_replace_this_//g' src/revisitpy/models.py
+          uv run --no-sync datamodel-codegen
+
+      - name: Test generated models
+        run: uv run --no-sync python -m unittest discover -s tests
 
       - name: Update pyproject.toml version
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
+        run: uv run --no-sync python scripts/set_release_version.py --bump minor --version "$RELEASE_VERSION"
+
+      - name: Update lockfile version
+        run: uv lock
+
+      - name: Build and verify release artifacts
         run: |
-          # Extract the current version
-          MAJOR_VERSION=$(sed -nE 's/^version = "([0-9]+)\.[0-9]+\.[0-9]+"/\1/p' pyproject.toml)
-          MINOR_VERSION=$(sed -nE 's/^version = "[0-9]+\.([0-9]+)\.[0-9]+"/\1/p' pyproject.toml)
+          uv run --no-sync hatch build
+          uv run --no-sync python - <<'PYTHON'
+          import email
+          from pathlib import Path
+          import tarfile
+          import tomllib
+          import zipfile
 
-          # Increment the minor version
-          NEW_MINOR_VERSION=$((MINOR_VERSION + 1))
-          NEW_VERSION="${MAJOR_VERSION}.${NEW_MINOR_VERSION}.0"
-
-          # Update the version in pyproject.toml
-          sed -i -E 's/^version = "[0-9]+\.[0-9]+\.[0-9]+"/version = "'"${NEW_VERSION}"'"/' pyproject.toml
-
-          # Print the new version for debugging
-          echo "New version: ${NEW_VERSION}"
+          version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          wheel = Path(f"dist/revisitpy-{version}-py3-none-any.whl")
+          sdist = Path(f"dist/revisitpy-{version}.tar.gz")
+          if set(Path("dist").iterdir()) != {wheel, sdist}:
+              raise SystemExit("Unexpected release artifacts; refusing to publish")
+          with zipfile.ZipFile(wheel) as archive:
+              metadata = archive.read(f"revisitpy-{version}.dist-info/METADATA").decode()
+          with tarfile.open(sdist) as archive:
+              package_info = archive.extractfile(f"revisitpy-{version}/PKG-INFO").read().decode()
+          for text in (metadata, package_info):
+              headers = email.message_from_string(text)
+              if headers["Name"] != "revisitpy" or headers["Version"] != version:
+                  raise SystemExit("Artifact metadata does not match the requested release")
+          print(f"Verified wheel and sdist for revisitpy {version}")
+          PYTHON
 
       - name: Commit and push changes
         run: |
           git config --global user.email "jackwilburn@tutanota.com"
           git config --global user.name "Jack Wilburn"
-          git add -A
+          git add pyproject.toml uv.lock src/revisitpy/StudyConfigSchema.json src/revisitpy/models.py
           if ! git diff --cached --quiet; then
             git commit -m "Create a new version based on the latest tag"
           else
             echo "No changes to commit"
           fi
-          git pull --rebase origin main
+          # Fail before publishing if main moved while these artifacts were built.
           git push origin HEAD:main
-
-      - name: Hatch Install
-        run: |
-          uv pip install hatch
-
-      - name: Hatch Build
-        run: |
-          uv run hatch build
-
-      # - name: Hatch Build
-      #   run: |
-      #     uv hatch publish
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

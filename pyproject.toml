@@ -26,6 +26,19 @@ dev = ["watchfiles", "jupyterlab"]
 # https://peps.python.org/pep-0735/
 [dependency-groups]
 dev = ["watchfiles", "jupyterlab"]
+release = ["datamodel-code-generator[black,isort]==0.89.0", "hatch>=1.18.2"]
+
+[tool.datamodel-codegen]
+input = "src/revisitpy/StudyConfigSchema.json"
+output = "src/revisitpy/models.py"
+input-file-type = "jsonschema"
+custom-template-dir = "custom_templates"
+output-model-type = "pydantic_v2.BaseModel"
+target-python-version = "3.12"
+additional-imports = "typing.TypedDict, warnings"
+formatters = ["black", "isort"]
+# Preserve the public schema field without stripping safe prefixes from enums.
+aliases = '{"$schema": "schema"}'
 
 
 [tool.hatch.build]

@@ -1020,12 +1020,14 @@ print(sequence)
 
 ## Building
 
-You may need to install hatch locally (do not use `uv add hatch` since it will add it to project dependencies and be shipped with build).
+The widget build requires Node.js and Yarn (`npm install --global yarn@1.22.22`); CI uses Node.js 24.
+
+Release automation uses Python 3.14. The package continues to support Python 3.12 and newer; CI tests Python 3.12, 3.13, 3.14, and 3.15. Install the locked release tools with the `release` dependency group (they are not shipped as runtime dependencies).
 
 ```bash
-uv pip install hatch
-uv run hatch build
-uv run hatch publish
+uv sync --locked --group release
+uv run --no-sync hatch build
+uv run --no-sync hatch publish
 ```
 
 We recommend using [uv](https://github.com/astral-sh/uv) for development.
@@ -1066,28 +1068,36 @@ in the notebook.
 ## Code Generation
 
 ```bash
-uv pip install datamodel-code-generator
-uv run datamodel-codegen --input src/revisitpy/StudyConfigSchema.json --output src/revisitpy/models.py  --custom-template-dir custom_templates --output-model-type pydantic_v2.BaseModel --additional-imports "typing.TypedDict, warnings" --input-file-type jsonschema --special-field-name-prefix we_are_going_to_replace_this && sed -i '' 's/we_are_going_to_replace_this_//g'  src/revisitpy/models.py
+uv sync --locked --group release
+uv run --no-sync datamodel-codegen
 ```
 
 ## Tests
 
 ```bash
-cd revisit-py
-uv run -m tests.test_module_one
+uv sync --locked --group release
+uv run --no-sync python -m unittest discover -s tests
 ```
 
 ## Publishing
 
-Update version number in pyproject.toml
+Merged pull requests to `main` trigger a patch release. To publish a specific
+version, wait for that release to finish, then start a **new run** of
+`.github/workflows/new_version.yml` on `main`. Set `release_version` to the exact
+package version (for example, `3.0.0`) and `study_ref` to the matching study tag
+(for example, `v3.0.0`) or commit. Leaving `release_version` blank preserves the
+normal minor-version increment. Re-running an old failed job uses its original
+workflow revision, so it does not pick up a newly merged workflow fix.
+
+Both publishing workflows share a concurrency group, build and verify the wheel
+and sdist before committing release files, and refuse to publish if pushing the
+release commit fails because `main` changed during the build.
+
+For a local release, update the version number in `pyproject.toml`, then keep the project version in `uv.lock` in sync before committing.
 
 ```bash
-uv run hatch build
-uv run hatch publish
-```
-
-If there hatch is not found, run the following:
-
-```bash
-uv pip install hatch
+uv lock
+uv sync --locked --group release
+uv run --no-sync hatch build
+uv run --no-sync hatch publish
 ```
