@@ -1081,7 +1081,19 @@ uv run --no-sync python -m unittest discover -s tests
 
 ## Publishing
 
-Update the version number in `pyproject.toml`, then keep the project version in `uv.lock` in sync before committing.
+Merged pull requests to `main` trigger a patch release. To publish a specific
+version, wait for that release to finish, then start a **new run** of
+`.github/workflows/new_version.yml` on `main`. Set `release_version` to the exact
+package version (for example, `3.0.0`) and `study_ref` to the matching study tag
+(for example, `v3.0.0`) or commit. Leaving `release_version` blank preserves the
+normal minor-version increment. Re-running an old failed job uses its original
+workflow revision, so it does not pick up a newly merged workflow fix.
+
+Both publishing workflows share a concurrency group, build and verify the wheel
+and sdist before committing release files, and refuse to publish if pushing the
+release commit fails because `main` changed during the build.
+
+For a local release, update the version number in `pyproject.toml`, then keep the project version in `uv.lock` in sync before committing.
 
 ```bash
 uv lock
