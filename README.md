@@ -1022,7 +1022,7 @@ print(sequence)
 
 The widget build requires Node.js and Yarn (`npm install --global yarn@1.22.22`); CI uses Node.js 24.
 
-Release automation uses Python 3.14. The package continues to support Python 3.12 and newer; CI tests Python 3.12, 3.13, and 3.14. Install the locked release tools with the `release` dependency group (they are not shipped as runtime dependencies).
+Release automation uses Python 3.14. The package continues to support Python 3.12 and newer; CI tests Python 3.12, 3.13, 3.14, and 3.15. Install the locked release tools with the `release` dependency group (they are not shipped as runtime dependencies).
 
 ```bash
 uv sync --locked --group release
