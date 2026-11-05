@@ -2210,7 +2210,7 @@ wheels = [
 
 [[package]]
 name = "revisitpy"
-version = "2.7.1"
+version = "3.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
