@@ -30,12 +30,31 @@ def select_version(current: str, bump: str, version: str = "") -> str:
     return f"{major}.{minor}.{patch + 1}" if bump == "patch" else f"{major}.{minor + 1}.0"
 
 
-def update_project_version(project: Path, bump: str, version: str = "") -> str:
+def select_study_version(current: str, study_tag: str, version: str = "") -> str:
+    """Follow the study's major/minor while allowing independent package patches."""
+    if not study_tag.startswith("v"):
+        raise ValueError("Study release tag must have the form vX.Y.Z")
+    study = parse_version(study_tag[1:])
+    package = parse_version(current)
+    if study[:2] < package[:2]:
+        raise ValueError("Cannot publish an older study major/minor series")
+    if version:
+        requested = parse_version(version)
+        if requested[:2] != study[:2]:
+            raise ValueError("Package major/minor must match the study release")
+        return select_version(current, "patch", version)
+    if study[:2] == package[:2]:
+        return f"{package[0]}.{package[1]}.{package[2] + 1}"
+    return f"{study[0]}.{study[1]}.0"
+
+
+def update_project_version(project: Path, bump: str, version: str = "", study_tag: str = "") -> str:
     """Validate before writing; preserve every byte outside the version value."""
     source = project.read_bytes().decode("utf-8")
     document = tomllib.loads(source)
     current = document.get("project", {}).get("version")
-    new_version = select_version(current, bump, version)
+    new_version = (select_study_version(current, study_tag, version)
+                   if study_tag else select_version(current, bump, version))
     # Restrict the edit to an ordinary [project] table and a single-line version
     # assignment. Reject unsupported layouts rather than risking another table.
     table = re.search(r"(?m)^\[project\][ \t]*(?:#[^\r\n]*)?\r?$", source)
@@ -67,9 +86,10 @@ def main() -> None:
     parser.add_argument("--project", type=Path, default=Path("pyproject.toml"))
     parser.add_argument("--bump", choices=("patch", "minor"), required=True)
     parser.add_argument("--version", default="", help="Exact X.Y.Z version; blank uses --bump")
+    parser.add_argument("--study-tag", default="", help="Study release tag vX.Y.Z")
     args = parser.parse_args()
     try:
-        version = update_project_version(args.project, args.bump, args.version)
+        version = update_project_version(args.project, args.bump, args.version, args.study_tag)
     except (ValueError, OSError) as error:
         parser.exit(1, f"Error: {error}\n")
     print(version)

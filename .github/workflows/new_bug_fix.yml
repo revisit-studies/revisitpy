@@ -22,9 +22,18 @@ jobs:
           ref: main
           token: ${{ secrets.PAT }}
 
+      - name: Resolve latest released study tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STUDY_TAG=$(gh api repos/revisit-studies/study/releases/latest --jq .tag_name)
+          [[ "$STUDY_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          echo "STUDY_TAG=$STUDY_TAG" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
         with:
           repository: revisit-studies/study
+          ref: refs/tags/${{ env.STUDY_TAG }}
           path: study
 
       - name: Copy new study docs to docs and cleanup
@@ -59,7 +68,7 @@ jobs:
         run: uv run --no-sync python -m unittest discover -s tests
 
       - name: Update pyproject.toml version
-        run: uv run --no-sync python scripts/set_release_version.py --bump patch
+        run: uv run --no-sync python scripts/set_release_version.py --bump patch --study-tag "$STUDY_TAG"
 
       - name: Update lockfile version
         run: uv lock
