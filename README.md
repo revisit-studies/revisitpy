@@ -1081,13 +1081,19 @@ uv run --no-sync python -m unittest discover -s tests
 
 ## Publishing
 
-Merged pull requests to `main` trigger a patch release. To publish a specific
-version, wait for that release to finish, then start a **new run** of
-`.github/workflows/new_version.yml` on `main`. Set `release_version` to the exact
-package version (for example, `3.0.0`) and `study_ref` to the matching study tag
-(for example, `v3.0.0`) or commit. Leaving `release_version` blank preserves the
-normal minor-version increment. Re-running an old failed job uses its original
-workflow revision, so it does not pick up a newly merged workflow fix.
+Package major/minor versions follow the study release; package patch versions advance
+independently. A new study series starts at `X.Y.0`, and another publication within
+the same series increments the package patch. Older study series are rejected.
+
+Study release notifications must include `client_payload.release_tag` (for example,
+`v3.1.0`). The schema is read from that exact tag. For a manual publication, start
+`.github/workflows/new_version.yml` on `main` with the required `study_tag`.
+Optionally set `release_version` to an exact package version in that same series;
+an equal version supports retrying a failed publication (PyPI rejects duplicates).
+
+Merged pull requests to `main` and manual bugfix runs use the latest published
+study release tag, never the moving study default branch. Re-running an old failed
+job uses its original workflow revision; start a new run to pick up workflow fixes.
 
 Both publishing workflows share a concurrency group, build and verify the wheel
 and sdist before committing release files, and refuse to publish if pushing the

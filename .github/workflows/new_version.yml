@@ -5,14 +5,13 @@ on:
     types: [study_repo_publish]
   workflow_dispatch:
     inputs:
-      release_version:
-        description: "Exact package version (X.Y.Z); blank increments the minor version"
-        required: false
+      study_tag:
+        description: "Released study tag (vX.Y.Z); supplies schema and package major/minor"
+        required: true
         type: string
-      study_ref:
-        description: "Study tag or commit supplying the schema"
+      release_version:
+        description: "Optional exact X.Y.Z package version; major/minor must match study_tag"
         required: false
-        default: "main"
         type: string
 
 concurrency:
@@ -31,10 +30,17 @@ jobs:
           ref: main
           token: ${{ secrets.PAT }}
 
+      - name: Resolve study release tag
+        env:
+          STUDY_TAG: ${{ github.event.client_payload.release_tag || inputs.study_tag }}
+        run: |
+          [[ "$STUDY_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || { echo "A release_tag / study_tag in vX.Y.Z form is required"; exit 1; }
+          echo "STUDY_TAG=$STUDY_TAG" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
         with:
           repository: revisit-studies/study
-          ref: ${{ inputs.study_ref || 'main' }}
+          ref: refs/tags/${{ env.STUDY_TAG }}
           path: study
 
       - name: Copy new study docs to docs and cleanup
@@ -71,7 +77,7 @@ jobs:
       - name: Update pyproject.toml version
         env:
           RELEASE_VERSION: ${{ inputs.release_version }}
-        run: uv run --no-sync python scripts/set_release_version.py --bump minor --version "$RELEASE_VERSION"
+        run: uv run --no-sync python scripts/set_release_version.py --bump patch --study-tag "$STUDY_TAG" --version "$RELEASE_VERSION"
 
       - name: Update lockfile version
         run: uv lock
